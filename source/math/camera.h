@@ -129,8 +129,8 @@ namespace acmath
        */
       VOID RotateCenterY( const Type Angle )
       {
-        SetLocAt(Loc,
-                 matr<Type>::RotateY(Angle).TransformPoint(At));
+        SetLocAt(matr<Type>::RotateY(Angle).TransformPoint(Loc),
+                 At);
       } /* End of 'Rotate' function */
 
       /* Rotate camera (around Y axis direction) functrion.

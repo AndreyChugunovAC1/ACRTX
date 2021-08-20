@@ -8,6 +8,7 @@
 #define __raytracer_h_
 
 #include <ctime>
+#include <thread>
 
 #include "scene/scene.h"
 #include "../frame/frame.h"
@@ -114,16 +115,15 @@ namespace acrtx
      */
     VOID DrawScene( VOID ) // FileName ?
     {
-      DBL x {}, y {};
-      DBL xp, yp;
-      ray R;
-      scene Current = Scenes[CurScene];
       if (Scenes.find(CurScene) == Scenes.end())
       {
         error::msg(error::other,
                    "Scene " + CurScene + " does not exist.");
         return;
       }
+      INT N;
+      std::vector<std::thread> Threads(N = std::thread::hardware_concurrency() - 1);
+
       // vec3 Color;
       // inter I;
 
@@ -140,22 +140,37 @@ namespace acrtx
       //           Cam.Up * yp).Normalize();
       // Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
       /////////////////////////
-      for (INT X = 0; X < 12; X++)
-      {
-        R.Org = Cam.Loc;
-        for (x = 0; x < Frame.W; x++)
-          for (y = 0; y < Frame.H; y++)
-          {
-            xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
-            yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
 
-            R.Dir = (Cam.Right * xp + 
-                     Cam.Dir * Cam.Proj + 
-                     Cam.Up * yp).Normalize();
-            Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
+      for (INT i = 0; i < N; i++)
+      {
+        Threads[i] = std::thread([this, i, N](){
+          for (INT X = 0; X < 3600; X++)
+          {
+            DBL x {}, y {};
+            DBL xp, yp;
+            ray R;
+            scene Current = Scenes[CurScene];
+          
+            R.Org = Cam.Loc;
+            for (x = i; x < Frame.W; x += N)
+              for (y = 0; y < Frame.H; y++)
+              {
+                xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
+                yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
+          
+                R.Dir = (Cam.Right * xp + 
+                          Cam.Dir * Cam.Proj + 
+                          Cam.Up * yp).Normalize();
+                Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
+              }
+            Frame.SaveTGA(CurScene, 0, X);
+            Cam.RotateCenterY(0.1);
           }
-        Frame.SaveTGA(CurScene, 0, X);
-        Cam.RotateCenterY(30);
+        });
+      }
+      for (auto &I : Threads)
+      {
+        I.join();
       }
     } /* End of 'DrawScene' function */
   }; /* End of 'raytracer' class */
