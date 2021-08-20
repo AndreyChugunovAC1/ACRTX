@@ -140,19 +140,23 @@ namespace acrtx
       //           Cam.Up * yp).Normalize();
       // Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
       /////////////////////////
-      R.Org = Cam.Loc;
-      for (x = 0; x < Frame.W; x++)
-        for (y = 0; y < Frame.H; y++)
-        {
-          xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
-          yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
+      for (INT X = 0; X < 12; X++)
+      {
+        R.Org = Cam.Loc;
+        for (x = 0; x < Frame.W; x++)
+          for (y = 0; y < Frame.H; y++)
+          {
+            xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
+            yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
 
-          R.Dir = (Cam.Right * xp + 
-                   Cam.Dir * Cam.Proj + 
-                   Cam.Up * yp).Normalize();
-          Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
-        }
-      Frame.SaveTGA(CurScene, 0);
+            R.Dir = (Cam.Right * xp + 
+                     Cam.Dir * Cam.Proj + 
+                     Cam.Up * yp).Normalize();
+            Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
+          }
+        Frame.SaveTGA(CurScene, 0, X);
+        Cam.RotateCenterY(30);
+      }
     } /* End of 'DrawScene' function */
   }; /* End of 'raytracer' class */
 } /* end of 'acrtx' namespace */

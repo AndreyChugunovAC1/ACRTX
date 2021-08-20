@@ -720,7 +720,10 @@ namespace acrtx
       std::string FileStr;
 
       while ((Ch = fgetc(F)) != EOF)
-        FileStr += Ch;
+        if (Ch == '/')
+          while ((Ch = fgetc(F)) != '\n' && Ch != EOF);
+        else
+          FileStr += Ch;
       fclose(F);
       // std::cout << FileStr;
       ScannerParser(FileStr); // --> Parser ?

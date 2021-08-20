@@ -25,7 +25,7 @@ INT main( INT ArgC, CHAR *ArgV[] )
 
   // double X = strtod("12 3 mas cdcdmk", nullptr);
   //if (ArgC > 1)
-  Read.ParseFile("a.txt");
+  Read.ParseFile("scene_1.txt");
 } /* End of 'main' function */
 
 /* END OF 'main.cpp' FILE */

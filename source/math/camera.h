@@ -68,7 +68,7 @@ namespace acmath
        * RETURNS: None.
        */
       VOID SetLocAt( const vec3<Type> &NLoc, 
-                       const vec3<Type> &NAt )
+                     const vec3<Type> &NAt )
       {
         Loc = NLoc;
         At = NAt;
@@ -113,12 +113,52 @@ namespace acmath
        *       const Type Angle;
        * RETURNS: None.
        */
-      VOID Rotate( const Type Angle )
+      VOID RotateY( const Type Angle )
       {
         SetLocAt(Loc,
                  (matr<Type>::Translate(-Loc) * 
                   matr<Type>::RotateY(Angle) *
                   matr<Type>::Translate(Loc)).TransformPoint(At));
+      } /* End of 'Rotate' function */
+
+      /* Rotate camera centrally (around Y axis direction) functrion.
+       * ARGUMENTS:
+       *   - Angle of rotation:
+       *       const Type Angle;
+       * RETURNS: None.
+       */
+      VOID RotateCenterY( const Type Angle )
+      {
+        SetLocAt(Loc,
+                 matr<Type>::RotateY(Angle).TransformPoint(At));
+      } /* End of 'Rotate' function */
+
+      /* Rotate camera (around Y axis direction) functrion.
+       * ARGUMENTS:
+       *   - Vector of rotation:
+       *       const vec3<Type> Vec;
+       *   - Angle of rotation:
+       *       const Type Angle;
+       * RETURNS: None.
+       */
+      VOID RotateCenterVec( const vec3<Type> Vec, const Type Angle )
+      {
+        // SetLocAt(Loc,
+        //          matr<Type>::RotateVec(Vec, Angle).TransformPoint(At));
+      } /* End of 'Rotate' function */
+
+      /* Rotate camera (around X (Right) axis direction) functrion.
+       * ARGUMENTS:
+       *   - Angle of rotation:
+       *       const Type Angle;
+       * RETURNS: None.
+       */
+      VOID RotateX( const Type Angle )
+      {
+        // SetLocAt(Loc,
+        //          (matr<Type>::Translate(-Loc) * 
+        //           matr<Type>::RotateVec(Right, Angle) *
+        //           matr<Type>::Translate(Loc)).TransformPoint(At));
       } /* End of 'Rotate' function */
     }; /* End of 'matr' class */
 } /* end of 'acmath' namespace */
