@@ -1,0 +1,72 @@
+material A
+ka 0 0 0
+kd 0 0 0
+ks 0 0 0
+ph 0
+kr 0
+kt 1
+!
+
+material C 
+ka 0.09 0.05 0.08
+kd 0.1 0.6 0.2
+ks 0.1 0.6 0.3
+ph 12
+kr 0.1
+kt 0.9
+!
+
+material B 
+ka 0.1 0.05 0.08
+kd 0.4 0.08 0.2
+ks 0.8 0.2 0.4
+ph 8
+kr 0.2
+kt 0.7
+!
+
+environment A
+refindex 1.1
+!
+
+environment B
+refindex 1.6
+!
+
+material C !
+
+plane K
+normal 0 0 1
+material B
+!
+
+plane K2
+material B
+!
+
+sphere A 
+material A
+environment A
+position 0 1.5 1
+!
+
+sphere B 
+material C
+environment B
+position -0 1.1 -2
+radius 0.7
+!
+
+sphere C !
+
+light_point L1
+position 3 3 5
+color 0.4 0.1 0.8
+!
+
+scene BBBBB
+sphere A
+sphere B
+light_point L1
+plane K2
+!

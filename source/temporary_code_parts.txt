@@ -1,0 +1,219 @@
+/* Read scene element function.
+ * ARGUMENTS: None.
+ * RETURNS: 
+ *   (parser_error) Parser error flag.
+ */ 
+template<typename Type>
+  parser_error Read( VOID )
+  {  
+    Type Entry;
+    std::string ErrorStr;
+
+    if (!Entry.ReadFromStream(File, &ErrorStr))
+    {
+      error::msg(ErrorStr);
+      return parser_error::error;
+    }
+    return parser_error::ok;
+  } /* End of 'Read' function */
+
+/* Parse block file functrion.
+ * ARGUMENTS: None.
+ * RETURNS:
+ *   (parser_error) Error flag.
+ */
+parser_error ParseBlock( VOID )
+{
+  std::string BlockType;
+  
+  File >> BlockType;
+  if (BlockType == "")
+    return parser_error::end;
+  if (BlockType == "material")
+    return Read<material>();
+  if (BlockType == "environment")
+    return Read<envi>();
+  if (BlockType == "sphere")
+    return Read<sphere>();
+  if (BlockType == "light_point")
+    return Read<light_point>();
+  if (BlockType == "scene")
+    return Read<scene>();
+  if (BlockType == "plane")
+    return Read<plane>();
+  error::msg("Unknown block");
+  return parser_error::error;
+} /* End of 'ParseBlock' function */
+
+/* Read double value from stream function.
+ * ARGUMENTS:
+ *   - Pointer to value to read:
+ *       DBL * const Val;
+ *   - Stream to read from:
+ *       std::iostream &Stream;
+ * RETURNS:
+ *   (BOOL) True if success;
+ */
+static BOOL ReadDBL( DBL * const Val, std::iostream &Stream )
+{
+  std::string TmpStr;
+
+  Stream >> TmpStr;
+  for (auto i : TmpStr)
+    if (!isdigit(i) && i != '.' && i != '-')
+      return FALSE;
+  *Val = strtod(TmpStr.c_str(), nullptr);
+  return TRUE;
+} /* End of 'ReadDBL' function */
+
+/* Read sphere from stream in ac1 format function.
+     * ARGUMENTS:
+     *   - Stream to read from:
+     *       std::iostream &Stream;
+     *   - Error string:
+     *       std::string * const Error;
+     * RETURNS:
+     *   (BOOL) True if success;
+     */
+    BOOL sphere::ReadFromStream( std::iostream &Stream, std::string * const Error )
+    {
+      std::string Name, Param;
+
+      auto SetError = [Error]( const std::string &Str ) -> BOOL
+      {
+        if (Error != nullptr)
+          *Error = Str;
+        return FALSE;
+      };
+
+      Stream >> Name;
+      if (!isalpha(Name[0]))
+        return SetError("Sphere name must beggins from letter!");
+      while ((Stream >> Param, Param) != "!")
+      {
+        if (Param == "radius")
+        {
+          if (!parser::ReadDBL(&R, Stream))
+            return SetError("Incorrect input of radius in sphere " + Name + " module");
+          R2 = R * R;
+        }
+        else if (Param == "center")
+        {
+          if (!C.ReadFromStream(Stream))
+            return SetError("Incorrect input of center in sphere " + Name + " module");
+        }
+        else if (Param == "material")
+        {
+          std::string Name;
+
+          Stream >> Name;
+          if ((Mtl = raytracer::Get().Materials.Get(Name)) == nullptr)
+            return SetError("Material with name " + Name + " does not exist");
+        }
+        else if (Param == "environment")
+        {
+          std::string Name;
+
+          Stream >> Name;
+          if ((Envi = raytracer::Get().Environments.Get(Name)) == nullptr)
+            return SetError("Environment with name " + Name + " does not exist");
+        }
+        else
+          return SetError("Unknown sphere parameter in sphere " + Name + " module");
+      }
+      raytracer::Get().Spheres.Add(Name, *this);
+      return TRUE;
+    } /* End of 'ReadFromStream' function */
+
+    /* Read plane from stream in ac1 format function.
+     * ARGUMENTS:
+     *   - Stream to read from:
+     *       std::iostream &Stream;
+     *   - Error string:
+     *       std::string * const Error;
+     * RETURNS:
+     *   (BOOL) True if success;
+     */
+    BOOL plane::ReadFromStream( std::iostream &Stream, std::string * const Error )
+    {
+      std::string Name, Param;
+      vec3 Pos = vec3(0);
+
+      auto SetError = [Error]( const std::string &Str ) -> BOOL
+      {
+        if (Error != nullptr)
+          *Error = Str;
+        return FALSE;
+      };
+
+      Stream >> Name;
+      if (!isalpha(Name[0]))
+      {
+        SetError("Sphere name must beggins from letter!");
+        return FALSE;
+      }
+      while ((Stream >> Param, Param) != "!")
+      {
+        if (Param == "normal")
+        {
+          if (!N.ReadFromStream(Stream))
+            return SetError("Incorrect input of radius in plane " + Name + " module");
+        }
+        else if (Param == "position")
+        {
+          if (!Pos.ReadFromStream(Stream))
+            return SetError("Incorrect input of center in plane " + Name + " module");
+        }
+        else if (Param == "material")
+        {
+          std::string Name;
+
+          Stream >> Name;
+          if ((Mtl = raytracer::Get().Materials.Get(Name)) == nullptr)
+            return SetError("Material with name " + Name + " does not exist");
+        }
+        else if (Param == "environment")
+        {
+          std::string Name;
+
+          Stream >> Name;
+          if ((Envi = raytracer::Get().Environments.Get(Name)) == nullptr)
+            return SetError("Environment with name " + Name + " does not exist");
+        }
+        else
+          return SetError("Unknown " + Param + " parameter in plane " + Name + " module");
+      }
+      D = (Pos & N);
+      raytracer::Get().Planes.Add(Name, *this);
+      return TRUE;
+    } /* End of 'ReadFromStream' function */
+
+
+      ///* Read vector from stream function. 
+      // * ARGUMENTS:
+      // *   - Stream to read from:
+      // *       std::iostream &Stream;
+      // *   - Error string:
+      // *       std::string *Error;
+      // */
+      //BOOL ReadFromStream( std::iostream &Stream )
+      //{
+      //  std::string TmpStr;
+
+      //  Stream >> TmpStr;
+      //  for (auto i : TmpStr)
+      //    if (!isdigit(i) && i != '.' && i != '-')
+      //      return FALSE;
+      //  X = (Type)strtod(TmpStr.c_str(), nullptr);
+      //  Stream >> TmpStr;
+      //  for (auto i : TmpStr)
+      //    if (!isdigit(i) && i != '.' && i != '-')
+      //      return FALSE;
+      //  Y = (Type)strtod(TmpStr.c_str(), nullptr);
+      //  Stream >> TmpStr;
+      //  for (auto i : TmpStr)
+      //    if (!isdigit(i) && i != '.' && i != '-')
+      //      return FALSE;
+      //  Z = (Type)strtod(TmpStr.c_str(), nullptr);
+      //  return TRUE;
+      //} /* End of 'ReadFromStream' function */

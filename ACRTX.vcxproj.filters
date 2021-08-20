@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Math Suport">
+      <UniqueIdentifier>{72ef090c-a010-417f-822b-8cd591f14ae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Frame Module">
+      <UniqueIdentifier>{4cd51ea8-a4c3-4729-8289-63ff412a96f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module">
+      <UniqueIdentifier>{0259e900-18b3-43da-bccc-3a075e97c9f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Parser Module">
+      <UniqueIdentifier>{8351dfe1-234f-4ce2-a050-7f8aff40da96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module\Scene Module">
+      <UniqueIdentifier>{d7ddcac2-9141-4eae-906f-dbdcce0207ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module\Scene Module\Resource System%255c">
+      <UniqueIdentifier>{75556e81-406b-4ef2-a25b-5e86ebdd9c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module\Scene Module\Shape System">
+      <UniqueIdentifier>{f9a03099-a73e-4e1f-8223-f1dfa8a48bd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module\Scene Module\Light System">
+      <UniqueIdentifier>{16abe41d-2ca8-4ebd-9ba0-b68c653b0379}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\def.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\frame\frame.h">
+      <Filter>Source Files\Frame Module</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\acmath.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\acmath_def.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\camera.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matr.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\ray.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vec3.h">
+      <Filter>Source Files\Math Suport</Filter>
+    </ClInclude>
+    <ClInclude Include="source\parser\parser.h">
+      <Filter>Source Files\Parser Module</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\raytracer.h">
+      <Filter>Source Files\Raytracer Module</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\scene.h">
+      <Filter>Source Files\Raytracer Module\Scene Module</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\scene_def.h">
+      <Filter>Source Files\Raytracer Module\Scene Module</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\resources\envi.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\resources\material.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\resources\resources.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\box.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\plane.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\shape.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\shape_def.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\sphere.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\shape\triangle.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\lights\dir.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\lights\light.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\lights\light_def.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\lights\point.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\lights\volume.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\rtx\scene\shape\shape.cpp">
+      <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="source\temporary_code_parts.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
