@@ -535,6 +535,55 @@ namespace acrtx
       return TRUE;
     } /* End of 'ReadSphere' function */
 
+    /* Parse 1 block function.
+     * ARGUMANS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ParseBlock( VOID )
+    {
+      if (Lexems[Pos].Type != lexem_type::reserved)
+      {
+        error::msg(error::parser, 
+                    "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
+        return FALSE;
+      }
+      else
+      {
+        switch(Lexems[Pos++].RW)
+        {
+        case reserved::material:
+          if (!ReadMaterial())
+            return FALSE;
+          break;
+        case reserved::sphere:
+          if (!ReadSphere())
+            return FALSE;
+          break;
+        case reserved::environment:
+          if (!ReadEnvi())
+            return FALSE;
+          break;
+        case reserved::plane:
+          if (!ReadPlane())
+            return FALSE;
+          break;
+        case reserved::lposition:
+          if (!ReadLightPoint())
+            return FALSE;
+          break;
+        case reserved::scene:
+          if (!ReadScene())
+            return FALSE;
+          break;
+        default:
+          error::msg(error::parser, 
+                      "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+      }
+    } /* End of 'ParseBlock' function */
+
     /* Parser file function. 
      * ARGUMENTS: None.
      * RETURNS: 
@@ -545,48 +594,8 @@ namespace acrtx
       INT Len = Lexems.size(); 
 
       for (Pos = 0; Pos < Len; Pos++)
-      {
-        if (Lexems[Pos].Type != lexem_type::reserved)
-        {
-          error::msg(error::parser, 
-                     "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
+        if (!ParseBlock())
           return FALSE;
-        }
-        else
-        {
-          switch(Lexems[Pos++].RW)
-          {
-          case reserved::material:
-            if (!ReadMaterial())
-              return FALSE;
-            break;
-          case reserved::sphere:
-            if (!ReadSphere())
-              return FALSE;
-            break;
-          case reserved::environment:
-            if (!ReadEnvi())
-              return FALSE;
-            break;
-          case reserved::plane:
-            if (!ReadPlane())
-              return FALSE;
-            break;
-          case reserved::lposition:
-            if (!ReadLightPoint())
-              return FALSE;
-            break;
-          case reserved::scene:
-            if (!ReadScene())
-              return FALSE;
-            break;
-          default:
-            error::msg(error::parser, 
-                       "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
-            return FALSE;
-          }
-        }
-      }
       return TRUE;
     } /* End of 'Parser' function */
 
@@ -603,6 +612,9 @@ namespace acrtx
       std::string Tmp;
       lexem L;
 
+      while (FileStr[Pos] != '\0' && isspace(FileStr[Pos]))
+        if (FileStr[Pos++] == '\n')
+          StrPos++;
       while (FileStr[Pos] != '\0')
       {
         Tmp = "";
@@ -650,7 +662,6 @@ namespace acrtx
           Tmp == "kt"            ? (L.RW = reserved::kmrefract)   :
           Tmp == "position"      ? (L.RW = reserved::position)    :
           Tmp == "color"         ? (L.RW = reserved::color)       :
-          Tmp == "for"           ? (L.RW = reserved::cycle)       :
           Tmp == "move"          ? (L.RW = reserved::move)        :
           Tmp == "rotate"        ? (L.RW = reserved::rotate)      :
           Tmp == "decay"         ? (L.RW = reserved::kedecay)     :
@@ -661,6 +672,7 @@ namespace acrtx
           Tmp == "minbb"         ? (L.RW = reserved::minbb)       :
           Tmp == "normal"        ? (L.RW = reserved::normal)      :
           Tmp == "scene"         ? (L.RW = reserved::scene)       :
+          Tmp == "for"           ? (L.RW = reserved::cycle)       :
           Tmp == "!"             ? (L.RW = reserved::endblock)    :
             (strncpy(L.Name, Tmp.c_str(), 30), L.Type = lexem_type::name, reserved::endblock);
           if (L.Type == lexem_type::name && Tmp.size() >= 30)
@@ -721,7 +733,11 @@ namespace acrtx
 
       while ((Ch = fgetc(F)) != EOF)
         if (Ch == '/')
+        {
           while ((Ch = fgetc(F)) != '\n' && Ch != EOF);
+          if (Ch == '\n')
+            FileStr += Ch;
+        }
         else
           FileStr += Ch;
       fclose(F);

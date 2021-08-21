@@ -120,7 +120,7 @@ namespace acrtx
      *       DBL StartTime;
      * RETURNS: None.
      */
-    VOID SaveTGA( const std::string &FileName, const DBL StartTime, INT Index = 0 ) const
+    VOID SaveTGA( const std::string &FileName, const DBL StartTime, INT Index = -1 ) const
     {
       // Tga file format structures
       #pragma pack(push, 1)
@@ -208,7 +208,7 @@ namespace acrtx
 
       std::fstream F;
 
-      if (Index != 0)
+      if (Index > -1)
         F.open(FileName + std::to_string(Index) + ".tga", std::fstream::out | std::fstream::binary);
       else
         F.open(FileName + ".tga", std::fstream::out | std::fstream::binary);

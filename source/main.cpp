@@ -19,12 +19,10 @@ acrtx::raytracer acrtx::raytracer::Instance;
  */
 INT main( INT ArgC, CHAR *ArgV[] )
 {
-  using namespace acrtx;
-
-  parser Read;
+  acrtx::parser Read;
 
   // double X = strtod("12 3 mas cdcdmk", nullptr);
-  //if (ArgC > 1)
+  // if (ArgC > 1)
   Read.ParseFile("scene_1.txt");
 } /* End of 'main' function */
 

@@ -140,12 +140,13 @@ namespace acrtx
       //           Cam.Up * yp).Normalize();
       // Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
       /////////////////////////
+      // auto F = [](){};
 
-      for (INT i = 0; i < N; i++)
+      for (INT X = 0; X < 360; X++)
       {
-        Threads[i] = std::thread([this, i, N](){
-          for (INT X = 0; X < 3600; X++)
-          {
+        for (INT i = 0; i < N; i++)
+        {
+          Threads[i] = std::thread([this, i, N]( VOID ){
             DBL x {}, y {};
             DBL xp, yp;
             ray R;
@@ -163,14 +164,12 @@ namespace acrtx
                           Cam.Up * yp).Normalize();
                 Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
               }
-            Frame.SaveTGA(CurScene, 0, X);
-            Cam.RotateCenterY(0.1);
-          }
-        });
-      }
-      for (auto &I : Threads)
-      {
-        I.join();
+          });
+        }
+        for (auto &I : Threads)
+          I.join();
+        Frame.SaveTGA(CurScene, 0, X);
+        Cam.RotateCenterY(1);
       }
     } /* End of 'DrawScene' function */
   }; /* End of 'raytracer' class */

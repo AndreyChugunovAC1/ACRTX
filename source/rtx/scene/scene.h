@@ -199,16 +199,16 @@ namespace acrtx
           else
             Color += Sh.C * 
               Info.Sh->Mtl->Ka;
-            // Color += 
-            //   Trace(ray(I.P + Sh.L * Threshold, Sh.L), 
-            //         Weight * I.Sh->Mtl->Kt, 
-            //         I.IsIn ? *I.Sh->Envi : envi::Air(), 
-            //         RecLevel + 1);
+            //Color += 
+            //  Trace(ray(Info.P + Sh.L * Threshold, Sh.L), 
+            //        Weight * I.Sh->Mtl->Kt, 
+            //        I.IsIn ? *I.Sh->Envi : envi::Air(), 
+            //        RecLevel + 1);
         }
         // End of shading 
         // Reflection 
         Color += 
-          Trace(Refl, Weight * Info.Sh->Mtl->Kr, Env, RecLevel + 1) * 
+          Trace (Refl, Weight * Info.Sh->Mtl->Kr, Env, RecLevel + 1) * 
             exp(-Info.T * Env.DecK);
         // Refraction 
         assert(Around.N != 0);
@@ -223,7 +223,6 @@ namespace acrtx
           Color +=
             Trace(Refr, Weight * Info.Sh->Mtl->Kt, Env, RecLevel + 1) *
               exp(-Info.T * Env.RefK);
-
         }
         else
         {
