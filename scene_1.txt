@@ -47,7 +47,7 @@ kt 0.5
 
 /////////// environments
 environment A 
-refindex 1.3
+refindex 0.001
 !
 environment B 
 refindex 1.9
@@ -63,6 +63,17 @@ refindex 2
 !
 
 /////////// shapes
+plane X1
+material X
+normal 0 0 1
+position 0 0 -10
+!
+
+sphere Center
+material X
+radius 20
+!
+
 sphere A
 environment A
 material A
@@ -124,15 +135,21 @@ color 0.1 0.1 0.4
 !
 
 /////////// scene
-scene Y
+scene Z
+// plane X1
 sphere A
 sphere B
 sphere C
 sphere D
 sphere E
 sphere F
+// sphere Center
 light_point A
 light_point B
 light_point C
 plane G
 !
+
+// for 360
+// draw Y
+// rotate 0 0 0 

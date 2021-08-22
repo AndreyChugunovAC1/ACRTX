@@ -112,43 +112,43 @@ namespace acrtx
       return IsInter;
     } /* End of 'Intersect' function */
 
-    /* Shade point by light sources function.
-     * ARGUMENTS:
-     *   - Intersection info:
-     *       const inter &I;
-     *   - Reflected ray direction:
-     *      const ray &Refl;
-     * RETURNS:
-     *   (vec3) Color shaded by lights;
-     */
-    vec3 Shade( const inter &I, const vec3 &Refl, const INT RecLevel, const DBL Weight )
-    {
-      shade Sh;
-      vec3 Color = vec3(0);
+    ///* Shade point by light sources function.
+    // * ARGUMENTS:
+    // *   - Intersection info:
+    // *       const inter &I;
+    // *   - Reflected ray direction:
+    // *      const ray &Refl;
+    // * RETURNS:
+    // *   (vec3) Color shaded by lights;
+    // */
+    //vec3 Shade( const inter &I, const vec3 &Refl, const INT RecLevel, const DBL Weight )
+    //{
+    //  shade Sh;
+    //  vec3 Color = vec3(0);
 
-      for (auto i : Lights)
-      {
-        i->Light(I, &Sh);
-        if (!IsIntersect(ray(I.P + Sh.L * Threshold, Sh.L)))
-        {
-          Color +=
-            Sh.C * 
-             (I.Sh->Mtl->Ka + 
-              I.Sh->Mtl->Kd * acmath::ClampHigh0(Sh.L & I.N) +
-              I.Sh->Mtl->Ks * pow(acmath::ClampHigh0(Refl & Sh.L), I.Sh->Mtl->Ph));
-        }
-        else
-          Color += Sh.C * 
-            I.Sh->Mtl->Ka;
-          // Color += 
-          //   Trace(ray(I.P + Sh.L * Threshold, Sh.L), 
-          //         Weight * I.Sh->Mtl->Kt, 
-          //         I.IsIn ? *I.Sh->Envi : envi::Air(), 
-          //         RecLevel + 1);
-        // if (I.Sh->)
-      }
-      return Color;
-    } /* End of 'Shade' function */
+    //  for (auto i : Lights)
+    //  {
+    //    i->Light(I, &Sh);
+    //    if (!IsIntersect(ray(I.P + Sh.L * Threshold, Sh.L)))
+    //    {
+    //      Color +=
+    //        Sh.C * 
+    //         (I.Sh->Mtl->Ka + 
+    //          I.Sh->Mtl->Kd * acmath::ClampHigh0(Sh.L & I.N) +
+    //          I.Sh->Mtl->Ks * pow(acmath::ClampHigh0(Refl & Sh.L), I.Sh->Mtl->Ph));
+    //    }
+    //    else
+    //      Color += Sh.C * 
+    //        I.Sh->Mtl->Ka;
+    //      // Color += 
+    //      //   Trace(ray(I.P + Sh.L * Threshold, Sh.L), 
+    //      //         Weight * I.Sh->Mtl->Kt, 
+    //      //         I.IsIn ? *I.Sh->Envi : envi::Air(), 
+    //      //         RecLevel + 1);
+    //    // if (I.Sh->)
+    //  }
+    //  return Color;
+    //} /* End of 'Shade' function */
 
     /* Trace ray by scene function.
      * ARGUMENTS:
@@ -212,8 +212,6 @@ namespace acrtx
             exp(-Info.T * Env.DecK);
         // Refraction 
         assert(Around.N != 0);
-        // cos2 = -Scalar * Scalar;
-        // cos2 *= cos2;
         Nu = Env.N / Around.N;
         if ((XXX = 1 - ((1 - Scalar * Scalar) * Nu * Nu)) > 0)
         {

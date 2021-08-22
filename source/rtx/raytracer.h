@@ -110,10 +110,12 @@ namespace acrtx
     // } /* End of 'AddPointLight' function */
 
     /* Draw choosen scene function.
-     * ARGUMENTS: None.
+     * ARGUMENTS: 
+     *   - Scene draw index:
+     *       const INT IndDraw;
      * RETURNS: None.
      */
-    VOID DrawScene( VOID ) // FileName ?
+    VOID DrawScene( const INT IndDraw = -1 ) // FileName ?
     {
       if (Scenes.find(CurScene) == Scenes.end())
       {
@@ -142,35 +144,31 @@ namespace acrtx
       /////////////////////////
       // auto F = [](){};
 
-      for (INT X = 0; X < 360; X++)
+      for (INT i = 0; i < N; i++)
       {
-        for (INT i = 0; i < N; i++)
-        {
-          Threads[i] = std::thread([this, i, N]( VOID ){
-            DBL x {}, y {};
-            DBL xp, yp;
-            ray R;
-            scene Current = Scenes[CurScene];
+        Threads[i] = std::thread([this, i, N]( VOID ){
+          DBL x {}, y {};
+          DBL xp, yp;
+          ray R;
+          scene Current = Scenes[CurScene];
           
-            R.Org = Cam.Loc;
-            for (x = i; x < Frame.W; x += N)
-              for (y = 0; y < Frame.H; y++)
-              {
-                xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
-                yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
+          R.Org = Cam.Loc;
+          for (x = i; x < Frame.W; x += N)
+            for (y = 0; y < Frame.H; y++)
+            {
+              xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
+              yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
           
-                R.Dir = (Cam.Right * xp + 
-                          Cam.Dir * Cam.Proj + 
-                          Cam.Up * yp).Normalize();
-                Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
-              }
-          });
-        }
-        for (auto &I : Threads)
-          I.join();
-        Frame.SaveTGA(CurScene, 0, X);
-        Cam.RotateCenterY(1);
+              R.Dir = (Cam.Right * xp + 
+                        Cam.Dir * Cam.Proj + 
+                        Cam.Up * yp).Normalize();
+              Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
+            }
+        });
       }
+      for (auto &I : Threads)
+        I.join();
+      Frame.SaveTGA(CurScene, 0, IndDraw);
     } /* End of 'DrawScene' function */
   }; /* End of 'raytracer' class */
 } /* end of 'acrtx' namespace */
