@@ -135,7 +135,7 @@ color 0.1 0.1 0.4
 !
 
 /////////// scene
-scene Z
+scene ACB
 // plane X1
 sphere A
 sphere B
@@ -150,6 +150,23 @@ light_point C
 plane G
 !
 
-// for 360
-// draw Y
+set at 0 0 0
+set loc 0 3 15
+
+for 360
+draw ACB
+rotate at 0 1 0
+!
+// for 31
+// draw ACB
+// move loc 0 0 -1
+// !
+// for 21
+// draw ACB
+// move loc -1 0 0
+// !
+// for 31
+// draw ACB
+// move loc 0 0 1
+// !
 // rotate 0 0 0 

@@ -23,6 +23,7 @@ namespace acrtx
     static raytracer Instance;
     frame Frame;
     std::string CurScene;
+    std::map<std::string, INT> Indexes;
     // stock<sphere> Spheres;
 
     std::map<std::string, scene> Scenes;
@@ -64,6 +65,28 @@ namespace acrtx
       return Instance;
     } /* End of 'Get' function */
 
+    /* Resize all function.
+     * ARGUMENTS:
+     *   - New size:
+     *       INT W, H;
+     * RETURNS: None.
+     */
+    VOID Resize( const INT W, const INT H )
+    {
+      Cam.Resize(W, H);
+      Frame.Resize(W, H);
+    } /* End of 'Resize' function */
+
+    /* Get camera for movement function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (camera) Camera;
+     */
+    camera & GetCamera( VOID )
+    {
+      return Cam;
+    } /* End of 'GetCamera' function */
+
     /* Enter current scene to fill function.
      * ARGUMENTS:
      *   - Name of scene:
@@ -73,6 +96,8 @@ namespace acrtx
     VOID ChooseScene( const std::string &Name )
     {
       CurScene = Name;
+      if (Indexes.find(CurScene) == Indexes.end())
+        Indexes[CurScene] = 0;
     } /* End of 'ChooseScene' function */
 
     /* Add to scene object from stock by name fuction.
@@ -110,18 +135,17 @@ namespace acrtx
     // } /* End of 'AddPointLight' function */
 
     /* Draw choosen scene function.
-     * ARGUMENTS: 
-     *   - Scene draw index:
-     *       const INT IndDraw;
-     * RETURNS: None.
+     * ARGUMENTS: None.
+     * RETURNS: 
+     *   (BOOL) Success of drawing.
      */
-    VOID DrawScene( const INT IndDraw = -1 ) // FileName ?
+    BOOL DrawScene( VOID ) // FileName ?
     {
       if (Scenes.find(CurScene) == Scenes.end())
       {
         error::msg(error::other,
                    "Scene " + CurScene + " does not exist.");
-        return;
+        return FALSE;
       }
       INT N;
       std::vector<std::thread> Threads(N = std::thread::hardware_concurrency() - 1);
@@ -148,27 +172,23 @@ namespace acrtx
       {
         Threads[i] = std::thread([this, i, N]( VOID ){
           DBL x {}, y {};
-          DBL xp, yp;
-          ray R;
           scene Current = Scenes[CurScene];
           
-          R.Org = Cam.Loc;
+          // R.Org = Cam.Loc;
           for (x = i; x < Frame.W; x += N)
             for (y = 0; y < Frame.H; y++)
-            {
-              xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
-              yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
-          
-              R.Dir = (Cam.Right * xp + 
-                        Cam.Dir * Cam.Proj + 
-                        Cam.Up * yp).Normalize();
-              Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
-            }
+              Frame.PutPixel((INT)x, (INT)y, 
+                             Current.Trace(
+                               Cam.BuildRay(
+                                 (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H
+                               )
+                             ).Clamp() * 255.0);
         });
       }
       for (auto &I : Threads)
         I.join();
-      Frame.SaveTGA(CurScene, 0, IndDraw);
+      return Frame.SaveTGA(CurScene, 0, Indexes[CurScene]++);
     } /* End of 'DrawScene' function */
   }; /* End of 'raytracer' class */
 } /* end of 'acrtx' namespace */

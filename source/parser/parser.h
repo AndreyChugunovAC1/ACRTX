@@ -13,6 +13,12 @@
 
 #include "../rtx/raytracer.h"
 
+#define PARSERCASE(A, B)   \
+        case (A):          \
+           if (!(B))       \
+             return FALSE; \
+           break
+
 /* Project namespace */
 namespace acrtx
 {
@@ -61,7 +67,13 @@ namespace acrtx
       minbb,
       maxbb,
       endblock,
-      kmphong
+      kmphong,
+      clocation,
+      catpoint,
+      center,
+      frame,
+      draw,
+      set
     }; /* End of 'reserved' struct */
 
     /* Lexem type representation struct */
@@ -131,6 +143,12 @@ namespace acrtx
      */
     BOOL ReadName( std::string * const Name )
     {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expected name (at end of file).");
+        return FALSE;
+      }
       if (Lexems[Pos].Type != lexem_type::name)
       {
         error::msg(error::parser, "Expected name at " + std::to_string(Lexems[Pos].Line) + " line.");
@@ -149,6 +167,12 @@ namespace acrtx
      */
     BOOL ReadDBL( DBL * const Val )
     {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expexcted number or vector (at end of file).");
+        return FALSE;
+      }
       if (Lexems[Pos].Type != lexem_type::number)
       {
         error::msg(error::parser,
@@ -414,7 +438,7 @@ namespace acrtx
           return FALSE;
         }
       }
-      raytracer::Get().DrawScene();
+      // raytracer::Get().DrawScene();
       return TRUE;
     } /* End of 'ReadScene' function */
 
@@ -491,6 +515,133 @@ namespace acrtx
       return TRUE;
     } /* End of 'ReadSphere' function */
 
+    /* Get block function.
+     * ARGUMENTS:
+     */
+    BOOL GetBlock( std::vector<lexem> * const Ls )
+    {
+      INT Len = Lexems.size();
+
+      while (Pos < Len &&
+             (Lexems[Pos].Type == lexem_type::reserved ? 
+                Lexems[Pos].RW != reserved::endblock : 
+                TRUE))
+        Ls->push_back(Lexems[Pos++]);
+      if (Pos == Len)
+      {
+        error::msg(error::parser,
+                   "Expected end-of-block (at end of file).");
+        return FALSE;
+      }
+      Pos++;
+      return TRUE;
+    } /* End of 'GetBlock' function */
+
+    /* Read cycle function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadCycle( VOID )
+    {
+      DBL X;
+      std::vector<lexem> List;
+      if (!ReadDBL(&X))
+        return FALSE;
+      if (!GetBlock(&List))
+        return FALSE;
+      std::vector<lexem> Tmp;
+      INT TmpPos = Pos, Len = List.size();
+
+      Pos = 0;
+      Tmp = Lexems;
+      Lexems = List;
+      for (Pos = 0; Pos < Len; Pos++)
+        if (!ParseBlock())
+          return FALSE;
+      for (INT i = 1; i < (INT)X; i++)
+        for (Pos = 0; Pos < Len && ParseBlock(TRUE); Pos++);
+      Pos = TmpPos;
+      Lexems = Tmp;
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadCycle' function */
+
+    /* Read frame function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadFrame( VOID )
+    {
+      DBL W, H;
+
+      if (!ReadDBL(&W) || !ReadDBL(&H))
+        return FALSE;
+      raytracer::Get().Resize((INT)W, (INT)H);
+      return TRUE;
+    } /* End of 'ReadCycle' function */
+
+    /* Read draw function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadDraw( VOID )
+    {
+      std::string Name;
+
+      if (!ReadName(&Name))
+        return FALSE;
+      raytracer::Get().ChooseScene(Name);
+      if (!raytracer::Get().DrawScene())
+      {
+        error::msg(error::parser,
+                   "Can not draw scene " + Name + ".");
+        return FALSE;
+      }
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadCycle' function */
+
+    /* Read rotate block function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadRotate( VOID )
+    {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expected type of rotation (at end of file).");
+        return FALSE;
+      }
+      if (Lexems[Pos].Type != lexem_type::reserved)
+      {
+        error::msg(error::parser,
+                   "Expected type of rotation in " + std::to_string(Lexems[Pos].Line) + " line.");
+        return FALSE;
+      }
+      vec3 Rotation;
+
+      Pos++;
+      if (!ReadVec(&Rotation))
+        return FALSE;
+      if (Lexems[Pos - 4].RW == reserved::catpoint)
+        raytracer::Get().GetCamera().RotateAt(Rotation);
+      else if (Lexems[Pos - 4].RW == reserved::clocation)
+        raytracer::Get().GetCamera().RotateLoc(Rotation);
+      else
+      {
+        error::msg(error::parser,
+                   "Expected type of rotation in " + std::to_string(Lexems[Pos - 4].Line) + " line.");
+        return FALSE;
+      }
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadRotate' function */
+
     /* Read light point function,
      * ARGUMENTS: None.
      * RETURNS:
@@ -508,7 +659,7 @@ namespace acrtx
       while (Lexems[Pos].RW != reserved::endblock)
       {
         if (Lexems[Pos].Type != lexem_type::reserved || 
-            (Lexems[Pos].RW != reserved::color    &&
+            (Lexems[Pos].RW != reserved::color &&
              Lexems[Pos].RW != reserved::position))
         {
           error::msg(error::parser,
@@ -517,14 +668,8 @@ namespace acrtx
         }
         switch (Lexems[Pos++].RW)
         {
-        case reserved::position:
-          if (!ReadVec(&LP.Pos))
-            return FALSE;
-          break;
-        case reserved::color:
-          if (!ReadVec(&LP.Color))
-            return FALSE;
-          break;
+        PARSERCASE(reserved::position, ReadVec(&LP.Pos));
+        PARSERCASE(reserved::color, ReadVec(&LP.Color));
         default:
           error::msg(error::parser, 
                      "Error in scanner in " + std::to_string(Lexems[Pos].Line) + " line.");
@@ -535,12 +680,90 @@ namespace acrtx
       return TRUE;
     } /* End of 'ReadSphere' function */
 
-    /* Parse 1 block function.
-     * ARGUMANS: None.
+    /* Read move block function.
+     * ARGUMENTS: None.
      * RETURNS:
      *   (BOOL) Success of reading;
      */
-    BOOL ParseBlock( VOID )
+    BOOL ReadMove( VOID )
+    {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expected type of move (at end of file).");
+        return FALSE;
+      }
+      if (Lexems[Pos].Type != lexem_type::reserved)
+      {
+        error::msg(error::parser,
+                   "Expected type of move in " + std::to_string(Lexems[Pos].Line) + " line.");
+        return FALSE;
+      }
+      vec3 Rotation;
+
+      Pos++;
+      if (!ReadVec(&Rotation))
+        return FALSE;
+      if (Lexems[Pos - 4].RW == reserved::catpoint)
+        raytracer::Get().GetCamera().MoveAt(Rotation);
+      else if (Lexems[Pos - 4].RW == reserved::clocation)
+        raytracer::Get().GetCamera().MoveLoc(Rotation);
+      else
+      {
+        error::msg(error::parser,
+                   "Expected type of move in " + std::to_string(Lexems[Pos - 4].Line) + " line.");
+        return FALSE;
+      }
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadMove' function */
+
+    /* Read set block function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadSet( VOID )
+    {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expected type of set (at end of file).");
+        return FALSE;
+      }
+      if (Lexems[Pos].Type != lexem_type::reserved)
+      {
+        error::msg(error::parser,
+                   "Expected type of set in " + std::to_string(Lexems[Pos].Line) + " line.");
+        return FALSE;
+      }
+      vec3 Loc;
+
+      Pos++;
+      if (!ReadVec(&Loc))
+        return FALSE;
+      if (Lexems[Pos - 4].RW == reserved::catpoint)
+        raytracer::Get().GetCamera().SetAt(Loc);
+      else if (Lexems[Pos - 4].RW == reserved::clocation)
+        raytracer::Get().GetCamera().SetLoc(Loc);
+      else
+      {
+        error::msg(error::parser,
+                   "Expected type of set in " + std::to_string(Lexems[Pos - 4].Line) + " line.");
+        return FALSE;
+      }
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadSet' function */
+
+    /* Parse 1 block function.
+     * ARGUMENTS: 
+     *   - Cycle flag:
+     *       const BOOL IsCycle = FALSE;
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ParseBlock( const BOOL IsCycle = FALSE )
     {
       if (Lexems[Pos].Type != lexem_type::reserved)
       {
@@ -552,36 +775,26 @@ namespace acrtx
       {
         switch(Lexems[Pos++].RW)
         {
-        case reserved::material:
-          if (!ReadMaterial())
-            return FALSE;
-          break;
-        case reserved::sphere:
-          if (!ReadSphere())
-            return FALSE;
-          break;
-        case reserved::environment:
-          if (!ReadEnvi())
-            return FALSE;
-          break;
-        case reserved::plane:
-          if (!ReadPlane())
-            return FALSE;
-          break;
-        case reserved::lposition:
-          if (!ReadLightPoint())
-            return FALSE;
-          break;
-        case reserved::scene:
-          if (!ReadScene())
-            return FALSE;
-          break;
+        PARSERCASE(reserved::material,    ReadMaterial());
+        PARSERCASE(reserved::sphere,      ReadSphere());
+        PARSERCASE(reserved::environment, ReadEnvi());
+        PARSERCASE(reserved::plane,       ReadPlane());
+        PARSERCASE(reserved::lposition,   ReadLightPoint());
+        PARSERCASE(reserved::scene,       ReadScene());
+        PARSERCASE(reserved::cycle,       ReadCycle());
+        PARSERCASE(reserved::frame,       ReadFrame());
+        PARSERCASE(reserved::draw,        ReadDraw());
+        PARSERCASE(reserved::rotate,      ReadRotate());
+        PARSERCASE(reserved::move,        ReadMove());
+        PARSERCASE(reserved::set,         ReadSet());
         default:
-          error::msg(error::parser, 
-                      "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
+          if (!IsCycle)
+            error::msg(error::parser, 
+                        "Expected block at " + std::to_string(Lexems[Pos].Line) + " line.");
           return FALSE;
         }
       }
+      return TRUE;
     } /* End of 'ParseBlock' function */
 
     /* Parser file function. 
@@ -654,6 +867,9 @@ namespace acrtx
           Tmp == "plane"         ? (L.RW = reserved::plane)       :
           Tmp == "light_point"   ? (L.RW = reserved::lposition)   :
           Tmp == "light_dir"     ? (L.RW = reserved::ldirection)  :
+          Tmp == "at"            ? (L.RW = reserved::catpoint)    :
+          Tmp == "loc"           ? (L.RW = reserved::clocation)   :
+          Tmp == "center"        ? (L.RW = reserved::center)      :
           Tmp == "ka"            ? (L.RW = reserved::kmambient)   :
           Tmp == "kd"            ? (L.RW = reserved::kmdeffered)  :
           Tmp == "ks"            ? (L.RW = reserved::kmspectral)  :
@@ -672,7 +888,10 @@ namespace acrtx
           Tmp == "minbb"         ? (L.RW = reserved::minbb)       :
           Tmp == "normal"        ? (L.RW = reserved::normal)      :
           Tmp == "scene"         ? (L.RW = reserved::scene)       :
+          Tmp == "frame"         ? (L.RW = reserved::frame)       :
           Tmp == "for"           ? (L.RW = reserved::cycle)       :
+          Tmp == "draw"          ? (L.RW = reserved::draw)        :
+          Tmp == "set"           ? (L.RW = reserved::set)         :
           Tmp == "!"             ? (L.RW = reserved::endblock)    :
             (strncpy(L.Name, Tmp.c_str(), 30), L.Type = lexem_type::name, reserved::endblock);
           if (L.Type == lexem_type::name && Tmp.size() >= 30)
@@ -702,7 +921,8 @@ namespace acrtx
     //} /* End of 'ReadLexem' function */
 
     /* Base class & program constructor. */
-    parser( VOID )
+    parser( VOID ) :
+      Pos(0)
     {
     } /* End of 'parser' function */
 
@@ -735,6 +955,7 @@ namespace acrtx
         if (Ch == '/')
         {
           while ((Ch = fgetc(F)) != '\n' && Ch != EOF);
+//          while ((Ch = fgetc(F)) != '\n' && Ch != EOF);
           if (Ch == '\n')
             FileStr += Ch;
         }
@@ -742,7 +963,10 @@ namespace acrtx
           FileStr += Ch;
       fclose(F);
       // std::cout << FileStr;
-      ScannerParser(FileStr); // --> Parser ?
+      if (!ScannerParser(FileStr))
+        std::cout << "Parsing of file " << FileName << " stopped\n";
+      else
+        std::cout << "Parsing of file " << FileName << " ended\n";
       Lexems.clear();
       // Parser();
       // parser_error Err;

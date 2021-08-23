@@ -118,9 +118,10 @@ namespace acrtx
      *       const std::string &FileName;
      *   - Start work time (for statistics):
      *       DBL StartTime;
-     * RETURNS: None.
+     * RETURNS: 
+     *   (BOOL) Success of saving.
      */
-    VOID SaveTGA( const std::string &FileName, const DBL StartTime, INT Index = -1 ) const
+    BOOL SaveTGA( const std::string &FileName, const DBL StartTime, INT Index = -1 ) const
     {
       // Tga file format structures
       #pragma pack(push, 1)
@@ -207,16 +208,17 @@ namespace acrtx
       // End of creating directories
 
       std::fstream F;
+      std::string Name;
 
       if (Index > -1)
-        F.open(FileName + std::to_string(Index) + ".tga", std::fstream::out | std::fstream::binary);
+        F.open(Name = FileName + std::to_string(Index) + ".tga", std::fstream::out | std::fstream::binary);
       else
-        F.open(FileName + ".tga", std::fstream::out | std::fstream::binary);
+        F.open(Name = FileName + ".tga", std::fstream::out | std::fstream::binary);
 
       if (!F.is_open())
       {
         error::msg(error::other, "Can not create file " + FileName);
-        return;
+        return FALSE;
       }
 
       SYSTEMTIME st;
@@ -264,7 +266,8 @@ namespace acrtx
 
       F.write((CHAR*)&FFooter, sizeof FFooter);
       F.close();
-      std::cout << "Frame was successfully saved.\n";
+      std::cout << "Frame " << Name << " was successfully saved.\n";
+      return TRUE;
     } /* End of 'SaveTGA' function */
   }; /* End of 'frame' class */
 } /* end of 'acrtx' namespace */

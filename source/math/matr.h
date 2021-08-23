@@ -165,7 +165,7 @@ namespace acmath
           matr<Type>(
              c, s, 0, 0,
             -s, c, 0, 0,
-             0, 0, 0, 0,
+             0, 0, 1, 0,
              0, 0, 0, 1
             );
       } /* End of 'RotateZ' function */
@@ -203,6 +203,27 @@ namespace acmath
           V.X * M[0][2] + V.Y * M[1][2] + V.Z * M[2][2]
           );
       } /* End of 'TransformVec' function */
+
+            /* Matr rotate around vector create function.
+       * ARGUMENTS:
+       *   - vector of rotation:
+       *       const vec3<Type> &V;
+       *   - angle of rotation:
+       *       Type A;
+       * RETURNS:
+       *   (matr<Type>) result matrix;
+       */
+      static matr<Type> RotateVec( const vec3<Type> &V, Type A )
+      {
+        A = D2R(A);
+        DBL c = cos(A), s = sin(A);
+
+        return 
+          matr<Type>(      c + V.X * V.X * (1 - c),   V.X * V.Y * (1 - c) + V.Z * s,   V.X * V.Z * (1 - c) - V.Y * s,   0,  
+                     V.Y * V.X * (1 - c) - V.Z * s,         c + V.Y * V.Y * (1 - c),   V.Y * V.Z * (1 - c) + V.X * s,   0,
+                     V.Z * V.X * (1 - c) + V.Y * s,   V.Z * V.Y * (1 - c) - V.X * s,   c + V.Z * V.Z * (1 - c)      ,   0,
+                                                 0,                               0,                               0,   1);
+      } /* End of 'RotateVec' function */
 
       /* Transform point function.
        * ARGUMENTS:
