@@ -151,12 +151,13 @@ plane G
 !
 
 set at 0 0 0
-set loc 0 3 15
+set loc 2 3 15
+frame 1200 1200
 
-for 360
+//for 10
 draw ACB
-rotate at 0 1 0
-!
+rotate at 0 36 0
+//!
 // for 31
 // draw ACB
 // move loc 0 0 -1

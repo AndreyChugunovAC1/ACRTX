@@ -99,6 +99,32 @@ namespace acmath
         SetLocAt(Loc, NAt);
       } /* End of 'SetAt' function */
 
+      /* Set zoom function.
+       * ARGUMENTS:
+       *   - New zoom:
+       *       const DBL Zoom;
+       * RETURNS: None.
+       */
+      VOID SetZoom( const DBL Zoom )
+      {
+        Proj = Zoom;
+        if (Proj <= 0)
+          Proj = 1;
+      } /* End of 'SetZoom' function */
+
+      /* Set zoom function.
+       * ARGUMENTS:
+       *   - New zoom:
+       *       const DBL Zoom;
+       * RETURNS: None.
+       */
+      VOID MulZoom( const DBL Zoom )
+      {
+        Proj *= Zoom;
+        if (Proj <= 0)
+          Proj = 1;
+      } /* End of 'SetZoom' function */
+
       /* Set camera to new location function.
        * ARGUMENTS:
        *   - New location, at point:

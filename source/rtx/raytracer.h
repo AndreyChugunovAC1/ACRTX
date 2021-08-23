@@ -42,6 +42,7 @@ namespace acrtx
     // Shapes
     stock<sphere> Spheres;
     stock<plane> Planes;
+    stock<box> Boxes;
 
     // Resources
     stock<material> Materials;
@@ -175,8 +176,11 @@ namespace acrtx
           scene Current = Scenes[CurScene];
           
           // R.Org = Cam.Loc;
+          // std::cout << Frame.W << " " << Frame.H << std::endl;
           for (x = i; x < Frame.W; x += N)
             for (y = 0; y < Frame.H; y++)
+            {
+              // std::cout << x << " " << y << std::endl;
               Frame.PutPixel((INT)x, (INT)y, 
                              Current.Trace(
                                Cam.BuildRay(
@@ -184,6 +188,7 @@ namespace acrtx
                                  ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H
                                )
                              ).Clamp() * 255.0);
+            }
         });
       }
       for (auto &I : Threads)

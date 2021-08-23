@@ -33,6 +33,7 @@ namespace acrtx
     frame( const INT W, const INT H )
     {
       Resize(W, H);
+      // std::cout << W << " " << H << std::endl;
     } /* End of 'frame' function*/
 
     /* Class destructor. */
@@ -50,7 +51,8 @@ namespace acrtx
     VOID Resize( const INT Nw, const INT Nh )
     {
       // Checking Nw, Nh > 0
-      assert((W = Nw) >= 0 && (H = Nh) >= 0);
+      H = Nh < 0 ? 0 : Nh;
+      W = Nw < 0 ? 0 : Nw;
 
       INT Size = W * H;
 

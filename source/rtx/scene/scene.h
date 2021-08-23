@@ -65,7 +65,8 @@ namespace acrtx
           Lights.push_back(Entry);
         else if constexpr
           (std::is_same_v<Type, sphere> ||
-           std::is_same_v<Type, plane>)
+           std::is_same_v<Type, plane>  ||
+           std::is_same_v<Type, box>)
           Shapes.push_back(Entry);
       } /* End of 'Add' function */
       

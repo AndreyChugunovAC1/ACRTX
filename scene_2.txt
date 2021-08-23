@@ -1,0 +1,100 @@
+// #include
+// 2nd scene: Box test
+
+// Material stock         
+material ClearReflection   ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 1   kt 0   !
+material ClearRefraction   ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 0   kt 1   !
+
+material MirrorRed           ka 0.19 0.04 0.03 kd 0.18 0.03 0.04 ks 0.15 0.04 0.06 ph 10 kr 0.9  kt 0.25 !
+material MirrorBlue          ka 0.08 0.03 0.19 kd 0.08 0.04 0.19 ks 0.06 0.02 0.18 ph 10 kr 0.9  kt 0.25 !
+material MirrorGreen         ka 0.05 0.19 0.05 kd 0.05 0.19 0.07 ks 0.03 0.17 0.06 ph 10 kr 0.9  kt 0.25 !
+material MirrorWhite         ka 0.10 0.10 0.10 kd 0.10 0.10 0.10 ks 0.10 0.10 0.10 ph 10 kr 0.9  kt 0.25 !
+
+material RefractionRed       ka 0.19 0.04 0.03 kd 0.18 0.03 0.04 ks 0.15 0.04 0.06 ph 10 kr 0.25 kt 0.9  !
+material RefractionBlue      ka 0.08 0.03 0.19 kd 0.08 0.04 0.19 ks 0.06 0.02 0.18 ph 10 kr 0.25 kt 0.9  !
+material RefractionGreen     ka 0.05 0.19 0.05 kd 0.05 0.19 0.07 ks 0.03 0.17 0.06 ph 10 kr 0.25 kt 0.9  !
+material RefractionWhite     ka 0.10 0.10 0.10 kd 0.10 0.10 0.10 ks 0.10 0.10 0.10 ph 10 kr 0.25 kt 0.9  !  
+
+material NormalRed           ka 0.19 0.04 0.03 kd 0.18 0.03 0.04 ks 0.15 0.04 0.06 ph 10 kr 0.2  kt 0.2  !
+material NormalBlue          ka 0.08 0.03 0.19 kd 0.08 0.04 0.19 ks 0.06 0.02 0.18 ph 10 kr 0.2  kt 0.2  !
+material NormalGreen         ka 0.05 0.19 0.05 kd 0.05 0.19 0.07 ks 0.03 0.17 0.06 ph 10 kr 0.2  kt 0.2  !
+material NormalWhite         ka 0.10 0.10 0.10 kd 0.10 0.10 0.10 ks 0.10 0.10 0.10 ph 10 kr 0.2  kt 0.2  !
+
+material NormalMirrorRed     ka 0.19 0.04 0.03 kd 0.18 0.03 0.04 ks 0.15 0.04 0.06 ph 10 kr 0.4  kt 0.2  !
+material NormalMirrorBlue    ka 0.08 0.03 0.19 kd 0.08 0.04 0.19 ks 0.06 0.02 0.18 ph 10 kr 0.4  kt 0.2  !
+material NormalMirrorGreen   ka 0.05 0.19 0.05 kd 0.05 0.19 0.07 ks 0.03 0.17 0.06 ph 10 kr 0.4  kt 0.2  !
+material NormalMirrorWhite   ka 0.10 0.10 0.10 kd 0.10 0.10 0.10 ks 0.10 0.10 0.10 ph 10 kr 0.4  kt 0.2  !
+
+// Environment stoc
+environment Normal         refindex 1   !
+environment LowRefraction  refindex 0.5 !
+environment HighRefraction refindex 2   !
+
+// Shape stock
+// Floor
+plane Floor environment Normal material NormalMirrorWhite !
+
+// Spheres
+sphere A1 radius 3   position -2.5 6   -2.5 material MirrorBlue        environment Normal         !
+sphere A2 radius 1   position -3   2   0    material NormalGreen       environment Normal         !
+sphere A3 radius 1.5 position -3   1.7 3    material RefractionRed     environment LowRefraction  !
+sphere A4 radius 3.5 position 4    4   3    material NormalRed         environment Normal         !
+sphere A5 radius 2   position 2.5  2   -2.5 material NormalMirrorWhite environment Normal         !
+// sphere A6 radius 3 position -2.5 6 -2.5 material MirrorBlue  environment Normal !
+// sphere A7 radius 3 position -2.5 6 -2.5 material MirrorBlue  environment Normal !
+// sphere A8 radius 3 position -2.5 6 -2.5 material MirrorBlue  environment Normal !
+
+// Boxes
+box B1 minbb -1   0.2 -1 maxbb 1    2.2 1  material RefractionWhite  environment HighRefraction !
+box B2 minbb -1.5 0.5 -2 maxbb -0.5 1.5 -1 material NormalMirrorRed  environment Normal         !
+box B3 minbb -2   0.6  1 maxbb -1   1.6 2  material ClearReflection  environment Normal         !
+//box B4 minbb -1       -1 maxbb 1    2   1  material RefractionWhite environment Normal !
+
+// Lights
+light_point L1 position 1  10 7 color 0.2 0.3 0.4 !
+light_point L2 position -5 7  2 color 0.4 0.1 0.2 !
+light_point L3 position -2 7  5 color 0.1 0.4 0.1 !
+
+scene SCX
+  plane Floor
+
+  sphere A1
+  sphere A2
+  sphere A3
+  sphere A4
+  sphere A5
+
+  box B1
+  box B2
+  box B3
+
+  light_point L1
+  light_point L2
+  light_point L3
+!
+
+// Default settings:
+frame 12000 12000
+set loc 0 2 15
+set at  0 0 0 
+zoom set 1
+
+// Drawing
+// for 90
+draw SCX
+rotate at 0 5 0
+// !
+
+
+
+
+
+
+
+
+
+
+
+
+
+

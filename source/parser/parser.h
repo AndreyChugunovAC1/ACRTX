@@ -37,6 +37,7 @@ namespace acrtx
     /* Lexem type representation struct */
     enum struct reserved
     {
+      zoom,
       material,
       environment,
       sphere,
@@ -404,6 +405,7 @@ namespace acrtx
             (Lexems[Pos].RW != reserved::sphere    && 
              Lexems[Pos].RW != reserved::plane     &&
              Lexems[Pos].RW != reserved::lposition &&
+             Lexems[Pos].RW != reserved::box       &&
              Lexems[Pos].RW != reserved::ldirection))
         {
           error::msg(error::parser,
@@ -432,6 +434,11 @@ namespace acrtx
             return FALSE;
           raytracer::Get().Add(raytracer::Get().Spheres.Get(Obj));
           break;
+        case reserved::box:
+          if (!ReadName(&Obj))
+            return FALSE;
+          raytracer::Get().Add(raytracer::Get().Boxes.Get(Obj));
+          break;
         default:
           error::msg(error::parser, 
                      "Error in scanner in " + std::to_string(Lexems[Pos].Line) + " line.");
@@ -441,6 +448,78 @@ namespace acrtx
       // raytracer::Get().DrawScene();
       return TRUE;
     } /* End of 'ReadScene' function */
+
+    /* Read box function,
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadBox( VOID )
+    {
+      box Box;
+      std::string Name;
+
+      /* Name reading */
+      if (!ReadName(&Name))
+        return FALSE;
+       
+      while (Lexems[Pos].RW != reserved::endblock)
+      {
+        if (Lexems[Pos].Type != lexem_type::reserved || 
+            (Lexems[Pos].RW != reserved::minbb    && 
+             Lexems[Pos].RW != reserved::maxbb    &&
+             Lexems[Pos].RW != reserved::material &&
+             Lexems[Pos].RW != reserved::environment))
+        {
+          error::msg(error::parser,
+                     "Unknown box parameter in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+        switch (Lexems[Pos++].RW)
+        {
+        case reserved::minbb:
+          if (!ReadVec(&Box.B1))
+            return FALSE;
+          break;
+        case reserved::maxbb:
+          if (!ReadVec(&Box.B2))
+            return FALSE;
+          break;
+        case reserved::material:
+        {
+          std::string Mat;
+          if (!ReadName(&Mat))
+            return FALSE;
+          if ((Box.Mtl = raytracer::Get().Materials.Get(Mat)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Material with name " + Mat + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+        }
+        case reserved::environment:
+        {
+          std::string Envi;
+          if (!ReadName(&Envi))
+            return FALSE;
+          if ((Box.Envi = raytracer::Get().Environments.Get(Envi)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Environment with name " + Envi + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+        }
+        default:
+          error::msg(error::parser, 
+                     "Error in scanner in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+      }
+      raytracer::Get().Boxes.Add(Name, Box);
+      return TRUE;
+    } /* End of 'ReadBox' function */
 
     /* Read sphere function,
      * ARGUMENTS: None.
@@ -579,6 +658,7 @@ namespace acrtx
       if (!ReadDBL(&W) || !ReadDBL(&H))
         return FALSE;
       raytracer::Get().Resize((INT)W, (INT)H);
+      Pos--;
       return TRUE;
     } /* End of 'ReadCycle' function */
 
@@ -636,6 +716,53 @@ namespace acrtx
       {
         error::msg(error::parser,
                    "Expected type of rotation in " + std::to_string(Lexems[Pos - 4].Line) + " line.");
+        return FALSE;
+      }
+      Pos--;
+      return TRUE;
+    } /* End of 'ReadRotate' function */
+
+    /* Read zoom block function.
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadZoom( VOID )
+    {
+      if ((UINT)Pos >= Lexems.size())
+      {
+        error::msg(error::parser,
+                   "Expected type of zoom (at end of file).");
+        return FALSE;
+      }
+      if (Lexems[Pos].Type == lexem_type::name)
+      {
+        error::msg(error::parser,
+                   "Expected type of zoom or zoom koeficent in " + 
+                   std::to_string(Lexems[Pos].Line) + " line.");
+        return FALSE;
+      }
+      DBL Zoom;
+
+      if (Lexems[Pos].Type == lexem_type::reserved &&
+          Lexems[Pos].RW == reserved::set)
+      {
+        Pos++;
+        if (!ReadDBL(&Zoom))
+          return FALSE;
+        raytracer::Get().GetCamera().SetZoom(Zoom);
+      }
+      else if (Lexems[Pos].Type == lexem_type::number)
+      {
+        if (!ReadDBL(&Zoom))
+          return FALSE;
+        raytracer::Get().GetCamera().MulZoom(Zoom);
+      }
+      else
+      {
+        error::msg(error::parser,
+                   "Expected type of rotation in " + 
+                   std::to_string(Lexems[Pos - 1].Line) + " line.");
         return FALSE;
       }
       Pos--;
@@ -787,6 +914,8 @@ namespace acrtx
         PARSERCASE(reserved::rotate,      ReadRotate());
         PARSERCASE(reserved::move,        ReadMove());
         PARSERCASE(reserved::set,         ReadSet());
+        PARSERCASE(reserved::box,         ReadBox());
+        PARSERCASE(reserved::zoom,        ReadZoom());
         default:
           if (!IsCycle)
             error::msg(error::parser, 
@@ -892,6 +1021,7 @@ namespace acrtx
           Tmp == "for"           ? (L.RW = reserved::cycle)       :
           Tmp == "draw"          ? (L.RW = reserved::draw)        :
           Tmp == "set"           ? (L.RW = reserved::set)         :
+          Tmp == "zoom"          ? (L.RW = reserved::zoom)        :
           Tmp == "!"             ? (L.RW = reserved::endblock)    :
             (strncpy(L.Name, Tmp.c_str(), 30), L.Type = lexem_type::name, reserved::endblock);
           if (L.Type == lexem_type::name && Tmp.size() >= 30)
