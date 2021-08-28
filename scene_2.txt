@@ -1,9 +1,10 @@
+  
 // #include
 // 2nd scene: Box test
 
 // Material stock         
-material ClearReflection   ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 1   kt 0   !
-material ClearRefraction   ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 0   kt 1   !
+material ClearReflection     ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 1    kt 0   !
+material ClearRefraction     ka 0    0    0    kd 0    0    0    ks 0    0    0    ph 0  kr 0    kt 1   !
 
 material MirrorRed           ka 0.19 0.04 0.03 kd 0.18 0.03 0.04 ks 0.15 0.04 0.06 ph 10 kr 0.9  kt 0.25 !
 material MirrorBlue          ka 0.08 0.03 0.19 kd 0.08 0.04 0.19 ks 0.06 0.02 0.18 ph 10 kr 0.9  kt 0.25 !
@@ -32,7 +33,9 @@ environment HighRefraction refindex 2   !
 
 // Shape stock
 // Floor
-plane Floor environment Normal material NormalMirrorWhite !
+// !!!
+plane Floor position 0 -1 0 environment Normal material NormalMirrorWhite !
+// !!!
 
 // Spheres
 sphere A1 radius 3   position -2.5 6   -2.5 material MirrorBlue        environment Normal         !
@@ -50,6 +53,12 @@ box B2 minbb -1.5 0.5 -2 maxbb -0.5 1.5 -1 material NormalMirrorRed  environment
 box B3 minbb -2   0.6  1 maxbb -1   1.6 2  material ClearReflection  environment Normal         !
 //box B4 minbb -1       -1 maxbb 1    2   1  material RefractionWhite environment Normal !
 
+// Triangles
+triangle T1 vertA 0 0 0 vertB 0 1 0 vertC 1 0 0  material NormalMirrorRed !
+triangle T2 vertA 1 0 0 vertB 0 1 0 vertC 0 0 -1 material NormalMirrorRed !
+triangle T3 vertA 0 1 0 vertB 0 0 0 vertC 0 0 -1 material NormalMirrorRed !
+triangle T4 vertA 0 0 0 vertB 1 0 0 vertC 0 0 -1 material NormalMirrorRed !
+
 // Lights
 light_point L1 position 1  10 7 color 0.2 0.3 0.4 !
 light_point L2 position -5 7  2 color 0.4 0.1 0.2 !
@@ -57,16 +66,20 @@ light_point L3 position -2 7  5 color 0.1 0.4 0.1 !
 
 scene SCX
   plane Floor
-
+//
   sphere A1
-  sphere A2
+//  sphere A2
   sphere A3
   sphere A4
-  sphere A5
-
-  box B1
-  box B2
+//  sphere A5
+//
+//  box B1
+//  box B2
   box B3
+  triangle T1
+  triangle T2
+  triangle T3
+  triangle T4
 
   light_point L1
   light_point L2
@@ -74,27 +87,13 @@ scene SCX
 !
 
 // Default settings:
-frame 12000 12000
+frame 1200 1200
 set loc 0 2 15
 set at  0 0 0 
 zoom set 1
 
 // Drawing
-// for 90
+for 90
 draw SCX
 rotate at 0 5 0
-// !
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+!

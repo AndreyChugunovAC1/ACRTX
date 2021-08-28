@@ -28,14 +28,14 @@
     <Filter Include="Source Files\Raytracer Module\Scene Module">
       <UniqueIdentifier>{d7ddcac2-9141-4eae-906f-dbdcce0207ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Raytracer Module\Scene Module\Resource System%255c">
-      <UniqueIdentifier>{75556e81-406b-4ef2-a25b-5e86ebdd9c7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Raytracer Module\Scene Module\Shape System">
       <UniqueIdentifier>{f9a03099-a73e-4e1f-8223-f1dfa8a48bd3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Raytracer Module\Scene Module\Light System">
       <UniqueIdentifier>{16abe41d-2ca8-4ebd-9ba0-b68c653b0379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raytracer Module\Scene Module\Resource System">
+      <UniqueIdentifier>{75556e81-406b-4ef2-a25b-5e86ebdd9c7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,13 +76,13 @@
       <Filter>Source Files\Raytracer Module\Scene Module</Filter>
     </ClInclude>
     <ClInclude Include="source\rtx\scene\resources\envi.h">
-      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System</Filter>
     </ClInclude>
     <ClInclude Include="source\rtx\scene\resources\material.h">
-      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System</Filter>
     </ClInclude>
     <ClInclude Include="source\rtx\scene\resources\resources.h">
-      <Filter>Source Files\Raytracer Module\Scene Module\Resource System%255c</Filter>
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System</Filter>
     </ClInclude>
     <ClInclude Include="source\rtx\scene\shape\box.h">
       <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
@@ -130,5 +130,8 @@
     <Text Include="source\temporary_code_parts.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

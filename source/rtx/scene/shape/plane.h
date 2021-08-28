@@ -97,17 +97,6 @@ namespace acrtx
       I->P = R(I->T);
       I->N = N;//(N & R.Dir) > 0 ? -N : N;
     } /* End of 'GetAdvInfo' function */
-
-    /* Read plane from stream in ac1 format function.
-     * ARGUMENTS:
-     *   - Stream to read from:
-     *       std::iostream &Stream;
-     *   - Error string:
-     *       std::string * const Error;
-     * RETURNS:
-     *   (BOOL) True if success;
-     */
-    BOOL ReadFromStream( std::iostream &Stream, std::string * const Error );
   }; /* End of 'shape' class */ 
 } /* end of 'acrtx' namespace */
 

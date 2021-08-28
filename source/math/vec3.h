@@ -93,6 +93,20 @@ namespace acmath
         return *this;
       } /* End of 'operator-=' function */
 
+      /* Vector compation funcion.
+       * ARGUMENTS:
+       *   - Second vector to comase:
+       *       const vec3<Type> &V;
+       * RETURNS:
+       *   (vec3<Type>) result vector;
+       */
+      BOOL operator==( const vec3<Type> &V ) const
+      {
+        return (X == V.X && 
+                Y == V.Y &&
+                Z == V.Z);
+      } /* End of 'operator-=' function */
+
       /* Dot product vectors funcion.
        * ARGUMENTS:
        *   - Second vector to product:

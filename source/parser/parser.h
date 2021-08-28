@@ -74,7 +74,11 @@ namespace acrtx
       center,
       frame,
       draw,
-      set
+      set,
+      triangle,
+      vertexA,
+      vertexB,
+      vertexC
     }; /* End of 'reserved' struct */
 
     /* Lexem type representation struct */
@@ -262,6 +266,92 @@ namespace acrtx
       return TRUE;
     } /* End of 'ReadMaterial' function */
 
+    /* Read triangle function,
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadTriangle( VOID )
+    {
+      //triangle Tri;
+      vec3 Vert[3] {
+        {0, 0, 0},
+        {1, 0, 0},
+        {0, 1, 0}
+      };
+      material *Mtl {};
+      envi *Envi {};
+      std::string Name;
+
+      /* Name reading */
+      if (!ReadName(&Name))
+        return FALSE;
+       
+      while (Lexems[Pos].RW != reserved::endblock)
+      {
+        if (Lexems[Pos].Type != lexem_type::reserved || 
+            (Lexems[Pos].RW != reserved::vertexA     && 
+             Lexems[Pos].RW != reserved::vertexB     && 
+             Lexems[Pos].RW != reserved::vertexC     && 
+             Lexems[Pos].RW != reserved::material    && 
+             Lexems[Pos].RW != reserved::environment))
+        {
+          error::msg(error::parser,
+                     "Unknown triangle parameter in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+        switch (Lexems[Pos++].RW)
+        {
+        case reserved::vertexA:
+          if (!ReadVec(&Vert[0]))
+            return FALSE;
+           break;
+        case reserved::vertexB:
+          if (!ReadVec(&Vert[1]))
+            return FALSE;
+           break;
+        case reserved::vertexC:
+          if (!ReadVec(&Vert[2]))
+            return FALSE;
+           break;
+        case reserved::material:
+        {
+          std::string Mat;
+
+          if (!ReadName(&Mat))
+            return FALSE;
+          if ((Mtl = raytracer::Get().Materials.Get(Mat)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Material with name " + Mat + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+         }
+        case reserved::environment:
+        {
+          std::string Mat;
+
+          if (!ReadName(&Mat))
+            return FALSE;
+          if ((Envi = raytracer::Get().Environments.Get(Mat)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Environment with name " + Mat + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+         }
+        default:
+          error::msg(error::parser, 
+                     "Error in scanner in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+      }
+      raytracer::Get().Triangles.Add(Name, triangle(Vert[0], Vert[1], Vert[2], Mtl, Envi));
+      return TRUE;
+    } /* End of 'ReadTriangle' function */
+
     /* Read environment function,
      * ARGUMENTS: None.
      * RETURNS:
@@ -406,6 +496,7 @@ namespace acrtx
              Lexems[Pos].RW != reserved::plane     &&
              Lexems[Pos].RW != reserved::lposition &&
              Lexems[Pos].RW != reserved::box       &&
+             Lexems[Pos].RW != reserved::triangle  &&
              Lexems[Pos].RW != reserved::ldirection))
         {
           error::msg(error::parser,
@@ -433,6 +524,11 @@ namespace acrtx
           if (!ReadName(&Obj))
             return FALSE;
           raytracer::Get().Add(raytracer::Get().Spheres.Get(Obj));
+          break;
+        case reserved::triangle:
+          if (!ReadName(&Obj))
+            return FALSE;
+          raytracer::Get().Add(raytracer::Get().Triangles.Get(Obj));
           break;
         case reserved::box:
           if (!ReadName(&Obj))
@@ -916,6 +1012,7 @@ namespace acrtx
         PARSERCASE(reserved::set,         ReadSet());
         PARSERCASE(reserved::box,         ReadBox());
         PARSERCASE(reserved::zoom,        ReadZoom());
+        PARSERCASE(reserved::triangle,    ReadTriangle());
         default:
           if (!IsCycle)
             error::msg(error::parser, 
@@ -1022,6 +1119,10 @@ namespace acrtx
           Tmp == "draw"          ? (L.RW = reserved::draw)        :
           Tmp == "set"           ? (L.RW = reserved::set)         :
           Tmp == "zoom"          ? (L.RW = reserved::zoom)        :
+          Tmp == "triangle"      ? (L.RW = reserved::triangle)    :
+          Tmp == "vertA"         ? (L.RW = reserved::vertexA)     :
+          Tmp == "vertB"         ? (L.RW = reserved::vertexB)     :
+          Tmp == "vertC"         ? (L.RW = reserved::vertexC)     :
           Tmp == "!"             ? (L.RW = reserved::endblock)    :
             (strncpy(L.Name, Tmp.c_str(), 30), L.Type = lexem_type::name, reserved::endblock);
           if (L.Type == lexem_type::name && Tmp.size() >= 30)
