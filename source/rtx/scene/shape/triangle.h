@@ -16,7 +16,7 @@ namespace acrtx
   class triangle : public shape
   {
   private:
-    // friend class parser;
+    friend class object;
     vec3 N;      // Triangle's normal
     DBL D;       // Special value for triangle's plane
     vec3 U1, V1; // Extra vectors for triangle

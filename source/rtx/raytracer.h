@@ -44,6 +44,7 @@ namespace acrtx
     stock<plane> Planes;
     stock<box> Boxes;
     stock<triangle> Triangles;
+    stock<object> Objects;
 
     // Resources
     stock<material> Materials;

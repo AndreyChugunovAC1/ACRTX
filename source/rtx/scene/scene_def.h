@@ -23,6 +23,7 @@ namespace acrtx
       P {};              // Intersection point
     BOOL IsIn {FALSE};   // Is inside flag
     const shape * Sh {}; // Intersected shape
+    INT Extra;           // Extra value
   }; /* End of 'inter' class */
 
   /* Shade info class */

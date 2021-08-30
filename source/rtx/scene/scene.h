@@ -169,7 +169,7 @@ namespace acrtx
       vec3 Color = BackGround;
       ray Refl, Refr;
       envi Env;
-      DBL Scalar, Nu, XXX;// cos2, XXX;
+      DBL Scalar, Nu, XXX; // cos2, XXX;
 
       if (RecLevel < MaxRecLevel && Weight > 0.1 && Intersect(R, &Info))
       {
@@ -229,6 +229,7 @@ namespace acrtx
             Trace(Refl, Weight * Info.Sh->Mtl->Kt, Env, RecLevel + 1) * 
               exp(-Info.T * Env.RefK);
         }
+        Color *= Info.Sh->Tex.Get();
       }
       return Color * Weight;
     } /* End of 'Trace' function */

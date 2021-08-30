@@ -37,6 +37,8 @@ namespace acrtx
     /* Lexem type representation struct */
     enum struct reserved
     {
+      source,
+      object,
       zoom,
       material,
       environment,
@@ -497,6 +499,7 @@ namespace acrtx
              Lexems[Pos].RW != reserved::lposition &&
              Lexems[Pos].RW != reserved::box       &&
              Lexems[Pos].RW != reserved::triangle  &&
+             Lexems[Pos].RW != reserved::object    &&
              Lexems[Pos].RW != reserved::ldirection))
         {
           error::msg(error::parser,
@@ -509,6 +512,11 @@ namespace acrtx
           if (!ReadName(&Obj))
             return FALSE;
           raytracer::Get().Add(raytracer::Get().LightPoints.Get(Obj));
+          break;
+        case reserved::object:
+          if (!ReadName(&Obj))
+            return FALSE;
+          raytracer::Get().Add(raytracer::Get().Objects.Get(Obj));
           break;
         case reserved::ldirection:
           if (!ReadName(&Obj))
@@ -979,6 +987,92 @@ namespace acrtx
       return TRUE;
     } /* End of 'ReadSet' function */
 
+    /* Read object function,
+     * ARGUMENTS: None.
+     * RETURNS:
+     *   (BOOL) Success of reading;
+     */
+    BOOL ReadObject( VOID )
+    {
+      object Obj;
+      std::string Name;
+
+      /* Name reading */
+      if (!ReadName(&Name))
+        return FALSE;
+      /*
+      if (!Obj.Load(Name.c_str()))
+      {
+        error::msg(error::other,
+                   "Can not load object from " + Name + " File.");
+        return FALSE;
+      }
+      */
+       
+      while (Lexems[Pos].RW != reserved::endblock)
+      {
+        if (Lexems[Pos].Type != lexem_type::reserved ||
+            (Lexems[Pos].RW != reserved::environment &&
+             Lexems[Pos].RW != reserved::source      &&
+             Lexems[Pos].RW != reserved::material))
+        {
+          error::msg(error::parser,
+                     "Unknown light point parameter in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+        switch (Lexems[Pos++].RW)
+        {
+        case reserved::source:
+        {
+          std::string FileName;
+          if (!ReadName(&FileName))
+            return FALSE;
+          if (!Obj.Load(FileName.c_str()))
+          {
+            error::msg(error::other,
+                       "Can not load object from " + FileName + " File.");
+            return FALSE;
+          }
+          break;
+        }
+        case reserved::material:
+        {
+          std::string Mat;
+
+          if (!ReadName(&Mat))
+            return FALSE;
+          if ((Obj.Mtl = raytracer::Get().Materials.Get(Mat)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Material with name " + Mat + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+         }
+        case reserved::environment:
+        {
+          std::string Mat;
+
+          if (!ReadName(&Mat))
+            return FALSE;
+          if ((Obj.Envi = raytracer::Get().Environments.Get(Mat)) == nullptr)
+          {
+            error::msg(error::parser,
+              "Environment with name " + Mat + " does not exist. Line: " + std::to_string(Lexems[Pos].Line) + ".");
+            return FALSE;
+          }
+          break;
+         }
+        default:
+          error::msg(error::parser, 
+                     "Error in scanner in " + std::to_string(Lexems[Pos].Line) + " line.");
+          return FALSE;
+        }
+      }
+      raytracer::Get().Objects.Add(Name, Obj);
+      return TRUE;
+    } /* End of 'ReadSphere' function */
+
     /* Parse 1 block function.
      * ARGUMENTS: 
      *   - Cycle flag:
@@ -1013,6 +1107,7 @@ namespace acrtx
         PARSERCASE(reserved::box,         ReadBox());
         PARSERCASE(reserved::zoom,        ReadZoom());
         PARSERCASE(reserved::triangle,    ReadTriangle());
+        PARSERCASE(reserved::object,      ReadObject());
         default:
           if (!IsCycle)
             error::msg(error::parser, 
@@ -1123,6 +1218,8 @@ namespace acrtx
           Tmp == "vertA"         ? (L.RW = reserved::vertexA)     :
           Tmp == "vertB"         ? (L.RW = reserved::vertexB)     :
           Tmp == "vertC"         ? (L.RW = reserved::vertexC)     :
+          Tmp == "object"        ? (L.RW = reserved::object)      :
+          Tmp == "source"        ? (L.RW = reserved::source)      :
           Tmp == "!"             ? (L.RW = reserved::endblock)    :
             (strncpy(L.Name, Tmp.c_str(), 30), L.Type = lexem_type::name, reserved::endblock);
           if (L.Type == lexem_type::name && Tmp.size() >= 30)

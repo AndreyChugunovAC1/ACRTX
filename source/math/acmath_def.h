@@ -13,6 +13,7 @@
 
 /* Base type define */
 typedef DOUBLE DBL;
+typedef FLOAT FLT;
 
 /* Math namespace */
 namespace acmath

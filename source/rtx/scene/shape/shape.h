@@ -12,6 +12,7 @@
 #include "plane.h"
 #include "triangle.h"
 #include "box.h"
+#include "object.h"
 
 #endif /* __shape_h_ */
 

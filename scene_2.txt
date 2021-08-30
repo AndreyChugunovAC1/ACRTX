@@ -34,13 +34,15 @@ environment HighRefraction refindex 2   !
 // Shape stock
 // Floor
 // !!!
-plane Floor position 0 -1 0 environment Normal material NormalMirrorWhite !
+plane Floor position 0 0 0 environment Normal material NormalMirrorWhite	 !
 // !!!
+                                         
+object Cow source cow.obj material ClearReflection environment HighRefraction !
 
 // Spheres
-sphere A1 radius 3   position -2.5 6   -2.5 material MirrorBlue        environment Normal         !
+sphere A1 radius 3   position -6   6   -7   material MirrorBlue        environment Normal         !
 sphere A2 radius 1   position -3   2   0    material NormalGreen       environment Normal         !
-sphere A3 radius 1.5 position -3   1.7 3    material RefractionRed     environment LowRefraction  !
+sphere A3 radius 1.5 position -0.5 0.5 10   material RefractionGreen   environment LowRefraction  !
 sphere A4 radius 3.5 position 4    4   3    material NormalRed         environment Normal         !
 sphere A5 radius 2   position 2.5  2   -2.5 material NormalMirrorWhite environment Normal         !
 // sphere A6 radius 3 position -2.5 6 -2.5 material MirrorBlue  environment Normal !
@@ -64,22 +66,23 @@ light_point L1 position 1  10 7 color 0.2 0.3 0.4 !
 light_point L2 position -5 7  2 color 0.4 0.1 0.2 !
 light_point L3 position -2 7  5 color 0.1 0.4 0.1 !
 
-scene SCX
+scene ACOW
   plane Floor
+  object Cow
 //
   sphere A1
 //  sphere A2
   sphere A3
-  sphere A4
+///  sphere A4
 //  sphere A5
 //
 //  box B1
 //  box B2
-  box B3
-  triangle T1
-  triangle T2
-  triangle T3
-  triangle T4
+///  box B3
+///  triangle T1
+///  triangle T2
+///  triangle T3
+///  triangle T4
 
   light_point L1
   light_point L2
@@ -87,13 +90,14 @@ scene SCX
 !
 
 // Default settings:
-frame 1200 1200
-set loc 0 2 15
-set at  0 0 0 
-zoom set 1
+frame 500 430
+// set loc 0 7 21
+set loc 0 10 21
+set at  0 3 0 
+zoom set 0.8
 
 // Drawing
-for 90
-draw SCX
+// for 90
+draw ACOW
 rotate at 0 5 0
-!
+//!
