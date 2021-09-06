@@ -1,9 +1,18 @@
-/* NAME          : triangle.h
- * PURPOSE       : Triangle module file.
- * CREATION DATE : 25.08.2021
- * LAST UPDATE   : 25.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : point.h
+ * PURPOSE     : Raytracing project.
+ *               Shape module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
-
 #ifndef __triangle_h_
 #define __triangle_h_
 
@@ -25,8 +34,15 @@ namespace acrtx
   public:
     /* Base class constructor.
      * ARGUMENTS:
-     *   - All triangles vertexes:
-     *       
+     *   - all triangles vertexes:
+     *       const vec3 &P0, const vec3 &P1,
+     *       const vec3 &P2;
+     *   - material:
+     *       material * const Mtl = nullptr;
+     *   - environment:
+     *        envi * const Envi  = nullptr;
+     *   - texture:
+     *        texture * const Tex = nullpt;
      */
     triangle( const vec3 &P0 = vec3(0), 
               const vec3 &P1 = vec3(1, 0, 0),
@@ -55,8 +71,15 @@ namespace acrtx
 
     /* Base class constructor.
      * ARGUMENTS:
-     *   - All triangles vertexes:
-     *       
+     *   - all triangles vertexes:
+     *       const vec3 &P0, const vec3 &P1,
+     *       const vec3 &P2;
+     *   - material:
+     *       material * const Mtl = nullptr;
+     *   - environment:
+     *        envi * const Envi  = nullptr;
+     *   - texture:
+     *        texture * const Tex = nullpt;
      */
     triangle( const vec3 &P0, 
               const vec3 &P1,

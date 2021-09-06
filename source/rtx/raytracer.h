@@ -5,7 +5,7 @@
  
 /* FILE NAME   : raytracer.h
  * PURPOSE     : Raytracing project.
- *               Mathematics library.
+ *               Raytracer module.
  * PROGRAMMER  : CGSG-SummerCamp'2021.
  *               Andrey Chugunov.
  * LAST UPDATE : 06.09.2021.
@@ -66,6 +66,7 @@ namespace acrtx
 
     // Lights
     stock<light_point> LightPoints;
+    stock<light_dir> LightDirs;
 
     /* Class destructor */
     ~raytracer( VOID )
@@ -168,18 +169,14 @@ namespace acrtx
       std::vector<std::thread> Threads(N = std::thread::hardware_concurrency() - 1);
       scene Current = Scenes[CurScene];
 
-      // vec3 Color;
-      // inter I;
-
-
       // Debug ray to center //
-      Frame.PutPixel((INT)Frame.W / 2, (INT)Frame.H / 2, 
-                             Current.Trace(
-                               Cam.BuildRay(
-                                 (Frame.W / 2 - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W, 
-                                 ((DBL)Frame.H / 2 - Frame.H / 2 + 0.5) * Cam.H / Frame.H
-                               )
-                             ).Clamp() * 255.0);
+      // Frame.PutPixel((INT)Frame.W / 2, (INT)Frame.H / 2, 
+      //                        Current.Trace(
+      //                          Cam.BuildRay(
+      //                            (Frame.W / 2 - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W, 
+      //                            ((DBL)Frame.H / 2 - Frame.H / 2 + 0.5) * Cam.H / Frame.H
+      //                          )
+      //                        ).Clamp() * 255.0);
       /////////////////////////
       // auto F = [](){};
 

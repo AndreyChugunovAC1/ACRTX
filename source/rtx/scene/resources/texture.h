@@ -42,7 +42,7 @@ namespace acrtx
     }; /* End of 'texture_type' class */
 
   private:
-    friend class parser;
+    // friend class parser;
     type Type;    // Type of texture
     vec3 * Plane; // Plane of image
     proc Proc;

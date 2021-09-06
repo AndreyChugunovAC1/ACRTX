@@ -24,6 +24,7 @@
     <ProjectGuid>{9f0d9617-7cd6-4a5d-a2eb-3b891983091d}</ProjectGuid>
     <RootNamespace>ACRTX</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>T06RT</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -175,9 +176,6 @@
   <ItemGroup>
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\rtx\scene\shape\shape.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="source\temporary_code_parts.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

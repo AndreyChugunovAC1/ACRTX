@@ -66,6 +66,13 @@ namespace acrtx
     // } /* End of 'CountNorm' function. */
 
   public:
+    /* Load object from .obj file function. 
+     * ARGUMENTS:
+     *   - File name to load:
+     *       const std::string &FileName;
+     * RETURNS:
+     *   (BOOL) success flag;
+     */
     BOOL Load( const CHAR *FileName )
     {
       vec3 Min, Max;
@@ -167,6 +174,8 @@ namespace acrtx
      *       material * const Mtl;
      *   - Environment pointer:
      *       envi * const Envi;
+     *   - Texture:
+     *       texture * const Tex;
      */
     object( const std::string &FileName,
             material * const Mtl = nullptr,
@@ -181,8 +190,12 @@ namespace acrtx
 
     /* Base class constructor.
      * ARGUMENTS:
-     *   - All triangles vertexes:
-     *       
+     *   - material:
+     *       material * const Mtl;
+     *   - environment:
+     *        envi * const Envi;
+     *   - texture:
+     *        texture * const Tex;
      */
     object( material * const Mtl = nullptr,
             envi * const Envi  = nullptr,

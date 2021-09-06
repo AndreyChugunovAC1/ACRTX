@@ -132,9 +132,4 @@
       <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="source\temporary_code_parts.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-  </ItemGroup>
 </Project>

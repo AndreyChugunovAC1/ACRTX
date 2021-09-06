@@ -1,15 +1,25 @@
-/* NAME          : scene.h
- * PURPOSE       : Scene module file.
- * CREATION DATE : 08.08.2021
- * LAST UPDATE   : 12.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : scehe.h
+ * PURPOSE     : Raytracing project.
+ *               Scene module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __scene_h_
 #define __scene_h_
 
-#include "../def.h"
-#include "shape\shape.h"
-#include "lights\light.h"
+#include "../../def.h"
+#include "shape/shape.h"
+#include "lights/light.h"
 
 // #include "../obj/shape/triangle.h"
 // #include "../obj/shape/box.h"
@@ -61,7 +71,8 @@ namespace acrtx
       VOID Add( Type * const Entry )
       {
         if constexpr 
-          (std::is_same_v<Type, light_point>)
+          (std::is_same_v<Type, light_point> || 
+           std::is_same_v<Type, light_dir>)
           Lights.push_back(Entry);
         else /*if constexpr
           (std::is_same_v<Type, sphere> ||

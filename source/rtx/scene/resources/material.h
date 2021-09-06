@@ -26,8 +26,8 @@ namespace acrtx
   class material
   {
   private:
-    friend class parser;
-    friend class scene;
+    // friend class parser;
+    // friend class scene;
     vec3 Ka, // Ambient coeficent
       Kd,    // Diffuze coeficent
       Ks;    // Spectral coeficent

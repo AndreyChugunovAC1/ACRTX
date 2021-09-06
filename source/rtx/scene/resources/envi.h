@@ -26,8 +26,8 @@ namespace acrtx
   class envi
   {
   private:
-    friend class scene;
-    friend class parser;
+    // friend class scene;
+    // friend class parser;
     DBL RefK, // Refraction koeficent
       DecK,   // Decay coeficent
       N;      // Refraction angle coeficent

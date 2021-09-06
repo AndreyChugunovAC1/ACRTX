@@ -20,7 +20,7 @@
 // #include "light_def.h" -- included in next files:
 #include "point.h"
 #include "dir.h"
-#include "volume.h"
+// #include "volume.h"
 
 #endif /* __light_h_ */
 
