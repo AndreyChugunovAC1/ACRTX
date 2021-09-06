@@ -1,18 +1,29 @@
-/* NAME          : camera.h
- * PURPOSE       : Math matrix module file.
- * CREATION DATE : 07.08.2021
- * LAST UPDATE   : 07.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : frame.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __camera_h_
 #define __camera_h_
 
-#include "acmath_def.h"
+#include "math_def.h"
 #include "vec3.h"
 #include "matr.h"
 
 /* Math namespace */
-namespace acmath
+namespace mth
 {
   /* Matrix 4x4 class */
   template<typename Type>
@@ -137,9 +148,10 @@ namespace acmath
       {
         Loc = NLoc;
         At = NAt;
-        // Up = NUp.Normalize();
+        //Up = (At = Loc)
         Dir = (At - Loc).Normalize();
-        Right = (Dir % Up).Normalize();
+        Right = (Dir % vec3<Type>(0, 1, 0)).Normalize();
+        Up = (Right % Dir).Normalize();
       } /* End of 'SetLocAt' function */
 
       /* Set camera to new location function.
@@ -181,8 +193,8 @@ namespace acmath
       VOID RotateCenterLoc( const vec3<Type> &Rotate )
       {
         SetLocAt((matr<Type>::RotateX(Rotate.X) * 
-                  matr<Type>::RotateX(Rotate.Y) *
-                  matr<Type>::RotateX(Rotate.Z)).TransformVec(Loc), At);
+                  matr<Type>::RotateY(Rotate.Y) *
+                  matr<Type>::RotateZ(Rotate.Z)).TransformVec(Loc), At);
       } /* End of 'RotateCenterLoc' function */
 
       /* Rotate at point around center function. 

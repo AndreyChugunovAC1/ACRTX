@@ -1,7 +1,17 @@
-/* NAME          : box.h
- * PURPOSE       : Box module file.
- * CREATION DATE : 11.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : box.h
+ * PURPOSE     : Raytracing project.
+ *               Box module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __box_h_
@@ -28,8 +38,9 @@ namespace acrtx
      *       const vec3 &N;
      */
     box( const vec3 &B1 = vec3(0), const vec3 &B2 = vec3(1),
-           material * const Mtl = nullptr, envi * const Envi = nullptr) :
-      B1(B1), B2(B2), shape(Mtl, Envi)
+           material * const Mtl = nullptr, envi * const Envi = nullptr,
+           texture * const Tex = nullptr) :
+      B1(B1), B2(B2), shape(Mtl, Envi, Tex)
     {
     } /* End of 'plane' function */
 
@@ -40,9 +51,9 @@ namespace acrtx
      *   - Plane normal:
      *       const vec3 &N;
      */
-    box( material * const Mtl, envi * const Envi = nullptr,
+    box( material * const Mtl, envi * const Envi = nullptr, texture * const Tex = nullptr,
            const vec3 &B1 = vec3(0), const vec3 &B2 = vec3(1) ) :
-      B1(B1), B2(B2), shape(Mtl, Envi)
+      B1(B1), B2(B2), shape(Mtl, Envi, Tex)
     {
     } /* End of 'plane' function */
 

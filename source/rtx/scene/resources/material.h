@@ -1,7 +1,17 @@
-/* NAME          : material.h
- * PURPOSE       : Material module file.
- * CREATION DATE : 10.08.2021
- * LAST UPDATE   : 10.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : material.h
+ * PURPOSE     : Raytracing project.
+ *               Material module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __material_h_

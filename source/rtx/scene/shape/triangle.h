@@ -33,8 +33,9 @@ namespace acrtx
               const vec3 &P2 = vec3(0, 1, 0),
               const vec3 &NewN = vec3(0), 
               material * const Mtl = nullptr,
-              envi * const Envi  = nullptr) : 
-      shape(Mtl, Envi), N(vec3(0)), D(0)
+              envi * const Envi  = nullptr,
+              texture * const Tex = nullptr) : 
+      shape(Mtl, Envi, Tex), N(vec3(0)), D(0)
     {
       vec3 s1 = P1 - P0,
         s2 = P2 - P0;
@@ -61,8 +62,9 @@ namespace acrtx
               const vec3 &P1,
               const vec3 &P2, 
               material * const Mtl,
-              envi * const Envi  = nullptr) : 
-      shape(Mtl, Envi), N(vec3(0)), D(0)
+              envi * const Envi  = nullptr,
+              texture * const Tex = nullptr) : 
+      shape(Mtl, Envi, Tex), N(vec3(0)), D(0)
     {
       vec3 s1 = P1 - P0,
         s2 = P2 - P0;

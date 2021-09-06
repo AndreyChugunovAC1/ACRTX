@@ -45,10 +45,10 @@
     <ClInclude Include="source\frame\frame.h">
       <Filter>Source Files\Frame Module</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\acmath.h">
+    <ClInclude Include="source\math\math.h">
       <Filter>Source Files\Math Suport</Filter>
     </ClInclude>
-    <ClInclude Include="source\math\acmath_def.h">
+    <ClInclude Include="source\math\math_def.h">
       <Filter>Source Files\Math Suport</Filter>
     </ClInclude>
     <ClInclude Include="source\math\camera.h">
@@ -114,14 +114,14 @@
     <ClInclude Include="source\rtx\scene\lights\point.h">
       <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
     </ClInclude>
-    <ClInclude Include="source\rtx\scene\lights\volume.h">
-      <Filter>Source Files\Raytracer Module\Scene Module\Light System</Filter>
-    </ClInclude>
     <ClInclude Include="source\rtx\scene\shape\thor.h">
       <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
     </ClInclude>
     <ClInclude Include="source\rtx\scene\shape\object.h">
       <Filter>Source Files\Raytracer Module\Scene Module\Shape System</Filter>
+    </ClInclude>
+    <ClInclude Include="source\rtx\scene\resources\texture.h">
+      <Filter>Source Files\Raytracer Module\Scene Module\Resource System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

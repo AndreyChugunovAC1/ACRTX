@@ -145,8 +145,8 @@
   <ItemGroup>
     <ClInclude Include="source\def.h" />
     <ClInclude Include="source\frame\frame.h" />
-    <ClInclude Include="source\math\acmath.h" />
-    <ClInclude Include="source\math\acmath_def.h" />
+    <ClInclude Include="source\math\math.h" />
+    <ClInclude Include="source\math\math_def.h" />
     <ClInclude Include="source\math\camera.h" />
     <ClInclude Include="source\math\matr.h" />
     <ClInclude Include="source\math\ray.h" />
@@ -157,10 +157,10 @@
     <ClInclude Include="source\rtx\scene\lights\light.h" />
     <ClInclude Include="source\rtx\scene\lights\light_def.h" />
     <ClInclude Include="source\rtx\scene\lights\point.h" />
-    <ClInclude Include="source\rtx\scene\lights\volume.h" />
     <ClInclude Include="source\rtx\scene\resources\envi.h" />
     <ClInclude Include="source\rtx\scene\resources\material.h" />
     <ClInclude Include="source\rtx\scene\resources\resources.h" />
+    <ClInclude Include="source\rtx\scene\resources\texture.h" />
     <ClInclude Include="source\rtx\scene\scene.h" />
     <ClInclude Include="source\rtx\scene\scene_def.h" />
     <ClInclude Include="source\rtx\scene\shape\box.h" />

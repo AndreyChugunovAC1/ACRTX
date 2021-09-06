@@ -1,11 +1,22 @@
-/* NAME          : acmath_def.h
- * PURPOSE       : Math main definition file.
- * CREATION DATE : 07.08.2021
- * LAST UPDATE   : 07.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : math_def.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
-#ifndef __acmath_def_h_
-#define __acmath_def_h_
+#ifndef __math_def_h_
+#define __math_def_h_
 
 #include <cmath>
 
@@ -16,7 +27,7 @@ typedef DOUBLE DBL;
 typedef FLOAT FLT;
 
 /* Math namespace */
-namespace acmath
+namespace mth
 {
   /* Pi math constant */
   const DBL PI = 3.14159265358979323846;
@@ -76,6 +87,6 @@ namespace acmath
     } /* End of 'D2R' function */
 } /* end of 'math' namespace */
 
-#endif /* __acmath_def_h_ */
+#endif /* __math_def_h_ */
 
  /* END OF 'acmath_def.h' FILE */

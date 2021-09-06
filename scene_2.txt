@@ -31,10 +31,13 @@ environment Normal         refindex 1   !
 environment LowRefraction  refindex 0.5 !
 environment HighRefraction refindex 2   !
 
+// texture stock
+texture A proc mand ! 
+
 // Shape stock
 // Floor
 // !!!
-plane Floor position 0 0 0 environment Normal material NormalMirrorWhite	 !
+plane Floor position 5 0 0 environment Normal material NormalMirrorWhite texture A !
 // !!!
                                          
 object Cow source cow.obj material ClearReflection environment HighRefraction !
@@ -66,19 +69,19 @@ light_point L1 position 1  10 7 color 0.2 0.3 0.4 !
 light_point L2 position -5 7  2 color 0.4 0.1 0.2 !
 light_point L3 position -2 7  5 color 0.1 0.4 0.1 !
 
-scene ACOW
+scene ACOW3
   plane Floor
-  object Cow
+//   object Cow
 //
   sphere A1
 //  sphere A2
-  sphere A3
-///  sphere A4
-//  sphere A5
+   sphere A3
+//   sphere A4
+//   sphere A5
 //
-//  box B1
+  box B1
 //  box B2
-///  box B3
+  box B3
 ///  triangle T1
 ///  triangle T2
 ///  triangle T3
@@ -90,14 +93,14 @@ scene ACOW
 !
 
 // Default settings:
-frame 500 430
+frame 1200 1200
 // set loc 0 7 21
-set loc 0 10 21
+set loc 0 7 21
 set at  0 3 0 
 zoom set 0.8
 
 // Drawing
-// for 90
-draw ACOW
+for 90
+draw ACOW3
 rotate at 0 5 0
-//!
+!

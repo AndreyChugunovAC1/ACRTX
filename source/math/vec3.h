@@ -1,16 +1,27 @@
-/* NAME          : vec3.h
- * PURPOSE       : Math vec3 module file.
- * CREATION DATE : 07.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : vec3.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __vec3_h_
 #define __vec3_h_
 
-#include "acmath_def.h"
+#include "math_def.h"
 
 /* Math namespace */
-namespace acmath
+namespace mth
 {
   /* 3-component vector class */
   template<typename Type>
@@ -264,12 +275,14 @@ namespace acmath
        */
       vec3<Type> Normalize() const
       {
-        Type Len = sqrt(X * X + Y * Y + Z * Z);
+        Type Len = X * X + Y * Y + Z * Z;
 
         if (Len == 0)
           return vec3<Type>(0);
-        else
-          return vec3<Type>(X / Len, Y / Len, Z / Len);
+        if (Len == 1)
+          return *this;
+        Len = sqrt(Len);
+        return vec3<Type>(X / Len, Y / Len, Z / Len);
       } /* End of 'Normalize' function */
 
       /* Clamp vector tgo vector [0, 1] function.

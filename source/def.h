@@ -1,4 +1,4 @@
-/* NAME          : def.h
+ /* NAME          : def.h
  * PURPOSE       : Main program file.
  * CREATION DATE : 07.08.2021
  * LAST UPDATE   : 07.08.2021
@@ -16,7 +16,7 @@
 
 #include <windows.h>
 
-#include "math/acmath.h"
+#include "math/math.h"
 
 // DBG memory hooks
 #ifndef NDEBUG
@@ -47,10 +47,10 @@ public:
 /* Project namespace */
 namespace acrtx
 {
-  typedef acmath::vec3<DBL> vec3;
-  typedef acmath::matr<DBL> matr;
-  typedef acmath::ray<DBL> ray;
-  typedef acmath::camera<DBL> camera;
+  typedef mth::vec3<DBL> vec3;
+  typedef mth::matr<DBL> matr;
+  typedef mth::ray<DBL> ray;
+  typedef mth::camera<DBL> camera;
 
   /* Base project stock template class */
   template<typename entry_type, typename key_type = std::string>

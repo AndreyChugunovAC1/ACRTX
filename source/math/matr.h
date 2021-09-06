@@ -1,27 +1,44 @@
-/* NAME          : matr.h
- * PURPOSE       : Math matrix module file.
- * CREATION DATE : 07.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : matr.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
+
 
 #ifndef __matr_h_
 #define __matr_h_
 
-#include "acmath_def.h"
+#include "math_def.h"
 #include "vec3.h"
 
 /* Math namespace */
-namespace acmath
+namespace mth
 {
   /* Matrix 4x4 class */
   template<typename Type>
     class matr
     {
     private:
-      Type M[4][4];  // Matix plane
+      Type M[4][4] {};  // Matix plane
       // friend class accam;
 
     public:
+      /* Default class constructor. */
+      matr( VOID )
+      {
+      } /* End of 'matr' function */
+
       /* Base class constructor
        * ARGUMENTS:
        *   - All matrix cells:
@@ -204,7 +221,7 @@ namespace acmath
           );
       } /* End of 'TransformVec' function */
 
-            /* Matr rotate around vector create function.
+      /* Matr rotate around vector create function.
        * ARGUMENTS:
        *   - vector of rotation:
        *       const vec3<Type> &V;
@@ -224,6 +241,26 @@ namespace acmath
                      V.Z * V.X * (1 - c) + V.Y * s,   V.Z * V.Y * (1 - c) - V.X * s,   c + V.Z * V.Z * (1 - c)      ,   0,
                                                  0,                               0,                               0,   1);
       } /* End of 'RotateVec' function */
+
+      /* Matr NDC create function.
+       * ARGUMENTS:
+       *   - new basis, and it's position:
+       *       const vec3 & Loc, Dir, Up, Right;
+       * RETURNS:
+       *   (matr<Type>) result matrix;
+       */
+      static matr<Type> NDC( const vec3<Type> &L, const vec3<Type> &Dir, 
+                             const vec3<Type> &Up,  const vec3<Type> &Right )
+      {
+        vec3 D = Dir.Normalize(),
+             R = Right.Normalize(),
+             U = Up.Normalize();
+        return 
+          matr<Type>(R.X,      U.X,      -D.X,  0,
+                     R.Y,      U.Y,      -D.Y,  0,
+                     R.Z,      U.Z,      -D.Z,  0,
+                     -(L & R), -(L & U), L & D, 1);
+      } /* End of 'NDC' function */
 
       /* Transform point function.
        * ARGUMENTS:

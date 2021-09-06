@@ -1,7 +1,18 @@
-/* NAME          : raytracer.h
- * PURPOSE       : Main raytracer module file.
- * CREATION DATE : 09.08.2021
- * LAST UPDATE   : 09.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : raytracer.h
+ * PURPOSE     : Raytracing project.
+ *               Mathematics library.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __raytracer_h_
@@ -36,6 +47,7 @@ namespace acrtx
     {
       Materials.Add("DEFAULT", material());
       Environments.Add("DEFAULT", envi());
+      Textures.Add("DEFAULT", texture());
     } /* End of 'raytracer' function */
 
   public:
@@ -44,11 +56,13 @@ namespace acrtx
     stock<plane> Planes;
     stock<box> Boxes;
     stock<triangle> Triangles;
+    stock<thor> Thors;
     stock<object> Objects;
 
     // Resources
     stock<material> Materials;
     stock<envi> Environments;
+    stock<texture> Textures;
 
     // Lights
     stock<light_point> LightPoints;
@@ -152,30 +166,27 @@ namespace acrtx
       }
       INT N;
       std::vector<std::thread> Threads(N = std::thread::hardware_concurrency() - 1);
+      scene Current = Scenes[CurScene];
 
       // vec3 Color;
       // inter I;
 
 
       // Debug ray to center //
-      // R.Org = Cam.Loc;
-      // x = Frame.W / 2;
-      // y = Frame.H / 2;
-      // xp = (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W;
-      // yp = ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H;
-      // 
-      // R.Dir = (Cam.Right * xp + 
-      //           Cam.Dir * Cam.Proj + 
-      //           Cam.Up * yp).Normalize();
-      // Frame.PutPixel((INT)x, (INT)y, Current.Trace(R).Clamp() * 255.0);
+      Frame.PutPixel((INT)Frame.W / 2, (INT)Frame.H / 2, 
+                             Current.Trace(
+                               Cam.BuildRay(
+                                 (Frame.W / 2 - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - Frame.H / 2 + 0.5) * Cam.H / Frame.H
+                               )
+                             ).Clamp() * 255.0);
       /////////////////////////
       // auto F = [](){};
 
       for (INT i = 0; i < N; i++)
       {
-        Threads[i] = std::thread([this, i, N]( VOID ){
+        Threads[i] = std::thread([this, i, N, Current]( VOID ){
           DBL x {}, y {};
-          scene Current = Scenes[CurScene];
           
           // R.Org = Cam.Loc;
           // std::cout << Frame.W << " " << Frame.H << std::endl;
@@ -184,12 +195,30 @@ namespace acrtx
             {
               // std::cout << x << " " << y << std::endl;
               Frame.PutPixel((INT)x, (INT)y, 
-                             Current.Trace(
+                             (Current.Trace(
                                Cam.BuildRay(
-                                 (x - (DBL)Frame.W / 2 + 0.5) * Cam.W / Frame.W, 
-                                 ((DBL)Frame.H / 2 - y + 0.5) * Cam.H / Frame.H
+                                 (x - (DBL)Frame.W / 2 + 0.25) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - y + 0.25) * Cam.H / Frame.H
                                )
-                             ).Clamp() * 255.0);
+                             ).Clamp() * 255.0 + 
+                               Current.Trace(
+                               Cam.BuildRay(
+                                 (x - (DBL)Frame.W / 2 + 0.25) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - y + 0.75) * Cam.H / Frame.H
+                               )
+                             ).Clamp() * 255.0 + 
+                               Current.Trace(
+                               Cam.BuildRay(
+                                 (x - (DBL)Frame.W / 2 + 0.75) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - y + 0.25) * Cam.H / Frame.H
+                               )
+                             ).Clamp() * 255.0  +
+                               Current.Trace(
+                               Cam.BuildRay(
+                                 (x - (DBL)Frame.W / 2 + 0.75) * Cam.W / Frame.W, 
+                                 ((DBL)Frame.H / 2 - y + 0.75) * Cam.H / Frame.H
+                               )
+                             ).Clamp() * 255.0) / 4);
             }
         });
       }

@@ -24,7 +24,7 @@ namespace acrtx
     std::vector<shape *> Shapes; // Shapes stock
     std::vector<light *> Lights; // Lights stock
     INT MaxRecLevel = 10;        // Maximal recursion level
-    DBL Threshold = .1e-5;       // Geometry fault
+    DBL Threshold = .1e-3;       // Geometry fault
     vec3 BackGround = vec3(0);   // BackGround color
 
   public:
@@ -162,7 +162,7 @@ namespace acrtx
      * RETURNS:
      *   (vec3) result color.
      */
-    vec3 Trace( const ray &R, const DBL Weight = 1, const envi &Around = envi::Air(), const INT RecLevel = 0 )
+    vec3 Trace( const ray &R, const DBL Weight = 1, const envi &Around = envi::Air(), const INT RecLevel = 0 ) const
     {
       shade Sh;
       inter Info;
@@ -177,6 +177,7 @@ namespace acrtx
         Scalar = (Info.N & R.Dir);
         Env = Info.IsIn ? *Info.Sh->Envi : Around;
 
+        Color = Info.Sh->GetTex(Info.P);
         if (Scalar > 0)
         {
           Info.N = -Info.N;
@@ -194,8 +195,8 @@ namespace acrtx
             Color +=
               Sh.C * 
                (Info.Sh->Mtl->Ka + 
-                Info.Sh->Mtl->Kd * acmath::ClampHigh0(Sh.L & Info.N) +
-                Info.Sh->Mtl->Ks * pow(acmath::ClampHigh0(Refl.Dir & Sh.L), Info.Sh->Mtl->Ph));
+                Info.Sh->Mtl->Kd * mth::ClampHigh0(Sh.L & Info.N) +
+                Info.Sh->Mtl->Ks * pow(mth::ClampHigh0(Refl.Dir & Sh.L), Info.Sh->Mtl->Ph));
           }
           else
             Color += Sh.C * 
@@ -229,7 +230,6 @@ namespace acrtx
             Trace(Refl, Weight * Info.Sh->Mtl->Kt, Env, RecLevel + 1) * 
               exp(-Info.T * Env.RefK);
         }
-        Color *= Info.Sh->Tex.Get();
       }
       return Color * Weight;
     } /* End of 'Trace' function */

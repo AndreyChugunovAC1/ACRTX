@@ -1,7 +1,17 @@
-/* NAME          : shape.cpp
- * PURPOSE       : Shape base module file.
- * CREATION DATE : 12.08.2021
- * LAST UPDATE   : 12.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : shape.cpp
+ * PURPOSE     : Raytracing project.
+ *               Shape coustructors realization.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #include "shape.h"
@@ -16,7 +26,8 @@ namespace acrtx
   /* Default class constructor */
   shape::shape( VOID ) :
     Mtl(raytracer::Get().Materials.Get("DEFAULT")), 
-    Envi(raytracer::Get().Environments.Get("DEFAULT"))
+    Envi(raytracer::Get().Environments.Get("DEFAULT")),
+    Tex(raytracer::Get().Textures.Get("DEFAULT"))
   {
   } /* End of 'shape' function */
 
@@ -27,12 +38,14 @@ namespace acrtx
     *   - Envirobment:
     *       envi * const NEnvi;
     */
-  shape::shape( material * const NMtl, envi * const NEnvi )
+  shape::shape( material * const NMtl, envi * const NEnvi, texture * const NTex )
   {
     Mtl =
       NMtl == nullptr ? raytracer::Get().Materials.Get("DEFAULT") : NMtl;
     Envi = 
       NEnvi == nullptr ? raytracer::Get().Environments.Get("DEFAULT") : NEnvi;
+    Tex  =
+      NTex == nullptr ? raytracer::Get().Textures.Get("DEFAULT") : NTex;
   } /* End of 'shape' function */
 } /* end of 'acrtx' namespace */
 

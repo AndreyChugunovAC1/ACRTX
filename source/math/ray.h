@@ -1,17 +1,29 @@
-/* NAME          : ray.h
- * PURPOSE       : Math ray module file.
- * CREATION DATE : 07.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : ray.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
+
 
 #ifndef __ray_h_
 #define __ray_h_
 
-#include "acmath_def.h"
+#include "math_def.h"
 #include "vec3.h"
 
 /* Math namespace */
-namespace acmath
+namespace mth
 {
   /* Ray representation class */
   template<typename Type>

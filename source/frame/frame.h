@@ -1,7 +1,18 @@
-  /* NAME          : frame.h
- * PURPOSE       : Frame module file.
- * CREATION DATE : 08.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : frame.h
+ * PURPOSE     : Raytracing project.
+ *               Frame module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ * NOTE        : Module namespace 'mth'.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __frame_h_
@@ -76,7 +87,7 @@ namespace acrtx
     {
       if (Plane != nullptr && 
         X >= 0 && Y >= 0 && X < W && Y < H)
-        Plane[X + (H - 1 - Y) * W] = Color;
+        Plane[X + Y * W] = Color;
     } /* End of 'PutPixel' function */
 
     /* Put pixel to frame function.
@@ -91,7 +102,7 @@ namespace acrtx
     {
       if (Plane != nullptr && 
         X >= 0 && Y >= 0 && X < W && Y < H)
-        Plane[X + (H - 1 - Y) * W] = 
+        Plane[X + Y * W] = 
           (((BYTE)(Color.Z)) | 
           (((BYTE)(Color.Y)) << 8) | 
           (((BYTE)(Color.X)) << 16));
@@ -110,7 +121,7 @@ namespace acrtx
     {
       if (Plane != nullptr && 
         X >= 0 && Y >= 0 && X < W && Y < H)
-        Plane[X + (H - 1 - Y) * W] = 
+        Plane[X + Y * W] = 
           (B | (G << 8) | (R << 16));
     } /* End of 'PutPixel' function */
 
@@ -231,11 +242,11 @@ namespace acrtx
       FHead.ColorMapType = 0;
       FHead.ImageType = 2;
       FHead.X = 0;
-      FHead.Y = 0;
+      FHead.Y = -W;
       FHead.Width = W;
       FHead.Height = H;
       FHead.BitsPerPixel = 32;
-      FHead.ImageDescr = 8;
+      FHead.ImageDescr = 32;
       
       EHead.Size = sizeof(tgaEXTHEADER);
       strcpy(EHead.AuthorName, "AC1");

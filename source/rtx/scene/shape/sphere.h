@@ -1,7 +1,17 @@
-/* NAME          : sphere.h
- * PURPOSE       : Sphere module file.
- * CREATION DATE : 09.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : sphere.h
+ * PURPOSE     : Raytracing project.
+ *               Shape module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __sphere_h_
@@ -31,8 +41,9 @@ namespace acrtx
      *       envi * const Envi;
      */
     sphere( const vec3 &C = vec3(0), const DBL R = 1,
-            material * const Mtl = nullptr, envi * const Envi = nullptr) :
-      R(R), R2(R * R), C(C), shape(Mtl, Envi)
+            material * const Mtl = nullptr, envi * const Envi = nullptr,
+            texture * const Tex = nullptr ) :
+      R(R), R2(R * R), C(C), shape(Mtl, Envi, Tex)
     {
     } /* End of 'sphere' function */
 
@@ -57,9 +68,9 @@ namespace acrtx
      *   - Sphere center:
      *       const vec3 &C;
      */
-    sphere( material * const Mtl, envi * const Envi = nullptr,
+    sphere( material * const Mtl, envi * const Envi = nullptr, texture * const Tex = nullptr,
             const vec3 &C = vec3(0), const DBL R = 1 ) :
-      R(R), R2(R * R), C(C), shape(Mtl, Envi)
+      R(R), R2(R * R), C(C), shape(Mtl, Envi, Tex)
     {
     } /* End of 'sphere' function */
 

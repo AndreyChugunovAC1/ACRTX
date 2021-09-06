@@ -1,7 +1,17 @@
-/* NAME          : object.h
- * PURPOSE       : Object module file.
- * CREATION DATE : 29.08.2021
- * LAST UPDATE   : 29.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : object.h
+ * PURPOSE     : Raytracing project.
+ *               Object module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __object_h_
@@ -160,8 +170,9 @@ namespace acrtx
      */
     object( const std::string &FileName,
             material * const Mtl = nullptr,
-            envi * const Envi = nullptr) : 
-      shape(Mtl, Envi)
+            envi * const Envi = nullptr,
+            texture * const Tex = nullptr) : 
+      shape(Mtl, Envi, Tex)
     {
       if (!Load(FileName.c_str()))
         error::msg(error::other,
@@ -174,8 +185,9 @@ namespace acrtx
      *       
      */
     object( material * const Mtl = nullptr,
-            envi * const Envi  = nullptr) : 
-      shape(Mtl, Envi)
+            envi * const Envi  = nullptr,
+            texture * const Tex = nullptr) : 
+      shape(Mtl, Envi, Tex)
     {
     } /* End of 'triangle' function */
 
@@ -197,7 +209,7 @@ namespace acrtx
       BOOL InterFlag = FALSE;
 
       Res.T = _HUGE;
-      for (INT i = 0; i < Prim.size(); i++)
+      for (INT i = 0; (UINT)i < Prim.size(); i++)
         if (Prim[i].Intersect(R, &Tmp)/* && Tmp.T > 0*/ && Tmp.T < Res.T)
         {
           Res.Extra = i;

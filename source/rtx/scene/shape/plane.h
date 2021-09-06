@@ -1,7 +1,17 @@
-/* NAME          : plane.h
- * PURPOSE       : Plane module file.
- * CREATION DATE : 11.08.2021
- * LAST UPDATE   : 11.08.2021
+/*************************************************************
+ * Copyright (C) 2021
+ *    Computer Graphics Support Group of 30 Phys-Math Lyceum
+ *************************************************************/
+ 
+/* FILE NAME   : plane.h
+ * PURPOSE     : Raytracing project.
+ *               Plane module.
+ * PROGRAMMER  : CGSG-SummerCamp'2021.
+ *               Andrey Chugunov.
+ * LAST UPDATE : 06.09.2021.
+ *
+ * No part of this file may be changed without agreement of
+ * Computer Graphics Support Group of 30 Phys-Math Lyceum
  */
 
 #ifndef __plane_h_
@@ -15,7 +25,7 @@ namespace acrtx
   /* Sphere representation class */
   class plane : public shape
   {
-  public:
+  public:  
     DBL D;  // Plane special value
     vec3 N; // Plane normal
 
@@ -27,8 +37,9 @@ namespace acrtx
      *       const vec3 &N;
      */
     plane( const vec3 &C = vec3(0), const vec3 &N = vec3(0, 1, 0),
-           material * const Mtl = nullptr, envi * const Envi = nullptr) :
-      D(N & C), N(N), shape(Mtl, Envi)
+           material * const Mtl = nullptr, envi * const Envi = nullptr,
+           texture * const Tex = nullptr) :
+      D(N & C), N(N), shape(Mtl, Envi, Tex)
     {
     } /* End of 'plane' function */
 
@@ -39,9 +50,9 @@ namespace acrtx
      *   - Plane normal:
      *       const vec3 &N;
      */
-    plane( material * const Mtl, envi * const Envi = nullptr,
+    plane( material * const Mtl, envi * const Envi = nullptr, texture * const Tex = nullptr,
            const vec3 &C = vec3(0), const vec3 &N = vec3(0, 1, 0) ) :
-      D(N & C), N(N), shape(Mtl, Envi)
+      D(N & C), N(N), shape(Mtl, Envi, Tex)
     {
     } /* End of 'plane' function */
 
@@ -97,6 +108,21 @@ namespace acrtx
       I->P = R(I->T);
       I->N = N;//(N & R.Dir) > 0 ? -N : N;
     } /* End of 'GetAdvInfo' function */
+
+    /* Get texture color function. (means get with spec. coords) 
+     * ARGUMENTS:
+     *   - Point on object:
+     *       const vec3 &P;
+     * RETURNS:
+     *   (vec3) Color;
+     */
+    vec3 GetTex( const vec3 &P ) const final
+    {
+      vec3 n2 = vec3(0, 0, -1), n1;
+      
+      n2 = (N % (n1 = (n2 % N).Normalize())).Normalize();
+      return Tex->Get((P & n1) / 10, (P & n2) / 10);
+    } /* End of 'Color' function */
   }; /* End of 'shape' class */ 
 } /* end of 'acrtx' namespace */
 
